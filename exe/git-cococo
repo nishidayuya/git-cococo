@@ -1,0 +1,76 @@
+#! /usr/bin/env ruby
+# coding: utf-8
+
+USAGE = <<EOS
+Usage: git cococo <command> <args...>
+
+Example:
+
+```
+$ git cococo sed -e s/foo/bar/g *.txt
+$ git cococo --init rails new blog
+```
+EOS
+
+require "shellwords"
+
+def run(*command_and_args)
+  if !system(*command_and_args)
+    raise
+  end
+end
+
+def escape_command_line(*command_and_args)
+  return command_and_args.map { |s|
+    Shellwords.escape(s).gsub(/(?!\A)\\=/, "=")
+  }.join(" ")
+end
+
+def create_commit_message(*command_and_args)
+  command_line = escape_command_line(*command_and_args)
+  return "run: git cococo #{command_line}"
+end
+
+commit_directory = nil
+if "--init" == ARGV.first
+  ARGV.shift
+  commit_directory = ARGV.last
+else
+#  if !File.directory?(".git")
+#    STDERR.puts(<<EOS)
+#Cannot found .git directory...
+#
+#Maybe you want to run with "--init" option:
+#$ git cococo --init #{escape_command_line(*ARGV)}
+#EOS
+#    exit(1)
+#  end
+end
+
+command_and_args = ARGV
+if command_and_args.empty?
+  STDERR.puts(USAGE)
+  exit(1)
+end
+
+stashed = false
+if !commit_directory
+  before_n_stashes = `git stash list`.lines.count
+  run("git stash --include-untracked --quiet")
+  after_n_stashes = `git stash list`.lines.count
+  stashed = before_n_stashes < after_n_stashes
+end
+
+run(*command_and_args)
+
+commit_message = create_commit_message(*command_and_args)
+if commit_directory
+  Dir.chdir(commit_directory)
+  run("git init")
+end
+run("git add --all")
+run(*%W"git commit -m #{commit_message}")
+
+if stashed
+  run("git stash pop --quiet")
+end
