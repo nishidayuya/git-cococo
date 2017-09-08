@@ -33,25 +33,31 @@ Rugged::Repository.class_eval do
 end
 
 class GitCococoTest < Test::Unit::TestCase
+  setup do
+    d = Dir.mktmpdir
+    @repository_path = Pathname(d)
+    @repository = Rugged::Repository.init_at(d)
+  end
+
+  teardown do
+    @repository_path.rmtree
+  end
+
   test("commit new file after command run") do
-    Dir.mktmpdir do |d|
-      repository_path = Pathname(d)
-      repository = Rugged::Repository.init_at(d)
-      exist_file_path = repository_path / "exist_file.txt"
-      exist_file_path.write("wrote.\n")
-      repository.git_commit(repository.git_add(exist_file_path.basename))
-      assert_equal(1, repository.head.log.length)
+    exist_file_path = @repository_path / "exist_file.txt"
+    exist_file_path.write("wrote.\n")
+    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    assert_equal(1, @repository.head.log.length)
 
-      new_file_path = repository_path / "new_file.txt"
-      command = "git cococo write_file #{new_file_path.basename} wrote."
-      Dir.chdir(repository_path) do
-        run_command(command)
-      end
-
-      assert_equal("run: #{command}\n", repository.head.target.message)
-      assert_equal(2, repository.head.log.length)
-      assert_equal("wrote.\n", new_file_path.read)
+    new_file_path = @repository_path / "new_file.txt"
+    command = "git cococo write_file #{new_file_path.basename} wrote."
+    Dir.chdir(@repository_path) do
+      run_command(command)
     end
+
+    assert_equal("run: #{command}\n", @repository.head.target.message)
+    assert_equal(2, @repository.head.log.length)
+    assert_equal("wrote.\n", new_file_path.read)
   end
 
   def run_command(*command)
