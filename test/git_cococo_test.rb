@@ -60,6 +60,22 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal("wrote.\n", new_file_path.read)
   end
 
+  test("commit exist file after command run") do
+    exist_file_path = @repository_path / "exist_file.txt"
+    exist_file_path.write("wrote.\n")
+    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    assert_equal(1, @repository.head.log.length)
+
+    command = "git cococo write_file #{exist_file_path.basename} wrote."
+    Dir.chdir(@repository_path) do
+      run_command(command)
+    end
+
+    assert_equal("run: #{command}\n", @repository.head.target.message)
+    assert_equal(2, @repository.head.log.length)
+    assert_equal("wrote.\nwrote.\n", exist_file_path.read)
+  end
+
   def run_command(*command)
     if !system(*command)
       raise "failure: #{command.inspect}"
