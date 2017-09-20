@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+output=$1
+shift
+
+echo writing to $output.
+echo $* >> $output
+echo wrote to $output.
