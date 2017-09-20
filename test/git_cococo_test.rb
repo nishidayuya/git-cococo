@@ -99,6 +99,9 @@ class GitCococoTest < Test::Unit::TestCase
 
   private
 
+  class RunCommandError < StandardError
+  end
+
   def assert_git_status(expected)
     actual = []
     @repository.status do |*args|
@@ -109,7 +112,7 @@ class GitCococoTest < Test::Unit::TestCase
 
   def run_command(*command)
     if !system(*command)
-      raise "failure: #{command.inspect}"
+      raise RunCommandError, "failure: #{command.inspect}"
     end
   end
 end
