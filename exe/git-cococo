@@ -30,7 +30,7 @@ $*
 if uncommitted_changes_are_exists
 then
   git add --all
-  git commit -m "run: git cococo $*"
+  git commit --quiet -m "run: git cococo $*"
 else
   echo No changes are detected.
 fi
