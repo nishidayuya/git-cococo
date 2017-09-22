@@ -1,76 +1,41 @@
-#! /usr/bin/env ruby
-# coding: utf-8
+#!/bin/sh
 
-USAGE = <<EOS
-Usage: git cococo <command> <args...>
+set -e
+
+USAGE='Usage: git cococo <command> [args...]
 
 Example:
 
-```
-$ git cococo sed -e s/foo/bar/g *.txt
-$ git cococo --init rails new blog
-```
-EOS
+    $ git cococo sed -e s/foo/bar/g *.txt
+'
 
-require "shellwords"
+if test -z "$1"
+then
+  echo -n "$USAGE" 1>&2
+  exit 1
+fi
 
-def run(*command_and_args)
-  if !system(*command_and_args)
-    raise
-  end
-end
+uncommitted_changes_are_exists() {
+  test x != "x$(git status --short)"
+}
 
-def escape_command_line(*command_and_args)
-  return command_and_args.map { |s|
-    Shellwords.escape(s).gsub(/(?!\A)\\=/, "=")
-  }.join(" ")
-end
+stashed=
+if uncommitted_changes_are_exists
+then
+  git stash --quiet --include-untracked
+  stashed=1
+fi
 
-def create_commit_message(*command_and_args)
-  command_line = escape_command_line(*command_and_args)
-  return "run: git cococo #{command_line}"
-end
-
-commit_directory = nil
-if "--init" == ARGV.first
-  ARGV.shift
-  commit_directory = ARGV.last
+$*
+if uncommitted_changes_are_exists
+then
+  git add --all
+  git commit -m "run: git cococo $*"
 else
-#  if !File.directory?(".git")
-#    STDERR.puts(<<EOS)
-#Cannot found .git directory...
-#
-#Maybe you want to run with "--init" option:
-#$ git cococo --init #{escape_command_line(*ARGV)}
-#EOS
-#    exit(1)
-#  end
-end
+  echo No changes are detected.
+fi
 
-command_and_args = ARGV
-if command_and_args.empty?
-  STDERR.puts(USAGE)
-  exit(1)
-end
-
-stashed = false
-if !commit_directory
-  before_n_stashes = `git stash list`.lines.count
-  run("git stash --include-untracked --quiet")
-  after_n_stashes = `git stash list`.lines.count
-  stashed = before_n_stashes < after_n_stashes
-end
-
-run(*command_and_args)
-
-commit_message = create_commit_message(*command_and_args)
-if commit_directory
-  Dir.chdir(commit_directory)
-  run("git init")
-end
-run("git add --all")
-run(*%W"git commit -m #{commit_message}")
-
-if stashed
-  run("git stash pop --quiet")
-end
+if test x1 = "x$stashed"
+then
+  git stash pop --quiet
+fi
