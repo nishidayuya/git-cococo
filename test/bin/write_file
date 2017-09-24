@@ -5,6 +5,17 @@ set -e
 output=$1
 shift
 
-echo writing to $output.
+if test x = "x$TEST_VERBOSE_OUTPUT"
+then
+  verbose_echo() {
+    :
+  }
+else
+  verbose_echo() {
+    echo "$*"
+  }
+fi
+
+verbose_echo writing to $output.
 echo $* >> $output
-echo wrote to $output.
+verbose_echo wrote to $output.
