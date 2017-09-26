@@ -37,5 +37,8 @@ fi
 
 if test x1 = "x$stashed"
 then
-  git stash pop --quiet
+  # If only untracked files, always output "Already up to date!".
+  #
+  # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
+  git stash pop --quiet | sed -e '/^Already up to date!$/ d'
 fi
