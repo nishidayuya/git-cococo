@@ -1,3 +1,4 @@
+require "open3"
 require "pathname"
 require "tmpdir"
 
@@ -80,7 +81,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal("wrote.\nwrote.\n", exist_file_path.read)
   end
 
-  test("stash, commit and unstash if uncommitted changes are exists") do
+  test("do nothing and exit 1 if uncommitted changes are exists") do
     exist_file_path = @repository_path / "exist_file.txt"
     exist_file_path.write("wrote.\n")
     @repository.git_commit(@repository.git_add(exist_file_path.basename))
@@ -91,14 +92,16 @@ class GitCococoTest < Test::Unit::TestCase
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
     assert_equal(1, @repository.head.log.length)
     new_file_path = @repository_path / "new_file.txt"
+    assert_equal(false, new_file_path.exist?)
     command = "git cococo write_file #{new_file_path.basename} wrote."
     Dir.chdir(@repository_path) do
-      run_command(command)
+      _, status = *Open3.capture2(command)
+      assert_equal(1, status.exitstatus)
     end
 
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
-    assert_equal(2, @repository.head.log.length)
-    assert_equal("wrote.\n", new_file_path.read)
+    assert_equal(1, @repository.head.log.length)
+    assert_equal(false, new_file_path.exist?)
   end
 
   private

@@ -19,11 +19,20 @@ uncommitted_changes_are_exists() {
   test x != "x$(git status --short)"
 }
 
-stashed=
 if uncommitted_changes_are_exists
 then
-  git stash --quiet --include-untracked
-  stashed=1
+  cat <<EOF
+Detects following uncommitted changes:
+
+`git status --short | sed -e 's|^|  |'`
+
+Run "git stash" and retry "git cococo":
+
+  $ git stash --include-untracked &&
+    git cococo $* &&
+    git stash pop
+EOF
+  exit 1
 fi
 
 $*
@@ -33,12 +42,4 @@ then
   git commit --quiet -m "run: git cococo $*"
 else
   echo No changes are detected.
-fi
-
-if test x1 = "x$stashed"
-then
-  # If only untracked files, always output "Already up to date!".
-  #
-  # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
-  git stash pop --quiet | sed -e '/^Already up to date!$/ d'
 fi
