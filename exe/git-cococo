@@ -2,26 +2,49 @@
 
 set -e
 
-USAGE='Usage: git cococo <command> [args...]
+USAGE='Usage: git cococo [options] [--] <command> [args...]
 
 Example:
 
     $ git cococo sed -e s/foo/bar/g *.txt
 '
 
-if test -z "$1"
-then
-  echo -n "$USAGE" 1>&2
-  exit 1
-fi
-
 uncommitted_changes_are_exists() {
   test x != "x$(git status --short)"
 }
 
+auto_stash=
+while :
+do
+  case "$1" in
+    --auto-stash)
+      auto_stash=1
+      ;;
+    --help)
+      echo -n "$USAGE"
+      exit
+      ;;
+    --)
+      shift
+      break
+      ;;
+    '')
+      echo -n "$USAGE" 1>&2
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
+done
+
+stashed=
 if uncommitted_changes_are_exists
 then
-  cat <<EOF
+  if test -z "$auto_stash"
+  then
+    cat <<EOF
 Detects following uncommitted changes:
 
 `git status --short | sed -e 's|^|  |'`
@@ -31,8 +54,16 @@ Run "git stash" and retry "git cococo":
   $ git stash --include-untracked &&
     git cococo $* &&
     git stash pop
+
+Or, use "--auto-stash" option:
+
+  $ git cococo --auto-stash $*
 EOF
-  exit 1
+    exit 1
+  fi
+
+  git stash --quiet --include-untracked
+  stashed=1
 fi
 
 $*
@@ -42,4 +73,12 @@ then
   git commit --quiet -m "run: git cococo $*"
 else
   echo No changes are detected.
+fi
+
+if test x1 = "x$stashed"
+then
+  # If only untracked files, always output "Already up to date!".
+  #
+  # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
+  git stash pop --quiet | sed -e '/^Already up to date!$/ d'
 fi
