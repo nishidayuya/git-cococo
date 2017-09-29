@@ -20,7 +20,7 @@ do
     --auto-stash)
       auto_stash=1
       ;;
-    --help)
+    -h|--help)
       echo -n "$USAGE"
       exit
       ;;
