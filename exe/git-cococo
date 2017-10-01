@@ -13,6 +13,10 @@ uncommitted_changes_are_exists() {
   test x != "x$(git status --short)"
 }
 
+create_commit_message() {
+  echo "run: git cococo $*"
+}
+
 auto_stash=
 while :
 do
@@ -70,7 +74,7 @@ $*
 if uncommitted_changes_are_exists
 then
   git add --all
-  git commit --quiet -m "run: git cococo $*"
+  create_commit_message $* | git commit --quiet --file=-
 else
   echo No changes are detected.
 fi
