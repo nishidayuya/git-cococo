@@ -17,5 +17,5 @@ else
 fi
 
 verbose_echo writing to $output.
-echo $* >> $output
+echo "$@" >> $output
 verbose_echo wrote to $output.

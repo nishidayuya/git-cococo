@@ -13,8 +13,22 @@ uncommitted_changes_are_exists() {
   test x != "x$(git status --short)"
 }
 
+escape_quote_argument() {
+  echo -n "$1" | sed -e "s/'/'\\\\''/g"
+}
+
 create_commit_message() {
-  echo "run: git cococo $*"
+  echo -n 'run: git cococo'
+  for arg in "$@"
+  do
+    need_quote=
+    expr "$arg" : '[ \$\"'\'']' > /dev/null && need_quote=1
+
+    echo -n ' '
+    test -n "$need_quote" && echo -n "'"
+    escape_quote_argument "$arg"
+    test -n "$need_quote" && echo -n "'"
+  done
 }
 
 auto_stash=
@@ -56,12 +70,12 @@ Detects following uncommitted changes:
 Run "git stash" and retry "git cococo":
 
   $ git stash --include-untracked &&
-    git cococo $* &&
+    git cococo "$@" &&
     git stash pop
 
 Or, use "--auto-stash" option:
 
-  $ git cococo --auto-stash $*
+  $ git cococo --auto-stash "$@"
 EOF
     exit 1
   fi
@@ -70,11 +84,11 @@ EOF
   stashed=1
 fi
 
-$*
+"$@"
 if uncommitted_changes_are_exists
 then
   git add --all
-  create_commit_message $* | git commit --quiet --file=-
+  create_commit_message "$@" | git commit --quiet --file=-
 else
   echo No changes are detected.
 fi
