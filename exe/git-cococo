@@ -9,25 +9,29 @@ Example:
     $ git cococo sed -e s/foo/bar/g *.txt
 '
 
+echo_n() {
+  printf -- '%s' "$1"
+}
+
 uncommitted_changes_are_exists() {
   test x != "x$(git status --short)"
 }
 
 escape_quote_argument() {
-  echo -n "$1" | sed -e "s/'/'\\\\''/g"
+  echo_n "$1" | sed -e "s/'/'\\\\''/g"
 }
 
 create_commit_message() {
-  echo -n 'run: git cococo'
+  echo_n 'run: git cococo'
   for arg in "$@"
   do
     need_quote=
     expr "$arg" : '[ \$\"'\'']' > /dev/null && need_quote=1
 
-    echo -n ' '
-    test -n "$need_quote" && echo -n "'"
+    echo_n ' '
+    test -n "$need_quote" && echo_n "'"
     escape_quote_argument "$arg"
-    test -n "$need_quote" && echo -n "'"
+    test -n "$need_quote" && echo_n "'"
   done
 }
 
@@ -39,7 +43,7 @@ do
       auto_stash=1
       ;;
     -h|--help)
-      echo -n "$USAGE"
+      echo_n "$USAGE"
       exit
       ;;
     --)
@@ -47,7 +51,7 @@ do
       break
       ;;
     '')
-      echo -n "$USAGE" 1>&2
+      echo_n "$USAGE" 1>&2
       exit 1
       ;;
     *)
