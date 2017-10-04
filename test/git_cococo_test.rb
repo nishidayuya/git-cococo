@@ -120,8 +120,23 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal(false, new_file_path.exist?)
     command = "git cococo write_file #{new_file_path.basename} wrote."
     Dir.chdir(@repository_path) do
-      _, status = *Open3.capture2(command)
+      stdout, status = *Open3.capture2(command)
       assert_equal(1, status.exitstatus)
+      assert_equal(<<STDOUT, stdout)
+Detects following uncommitted changes:
+
+  ?? uncommitted_file.txt
+
+Run "git stash" and retry "git cococo":
+
+  $ git stash --include-untracked &&
+    git cococo write_file new_file.txt wrote. &&
+    git stash pop
+
+Or, use "--auto-stash" option:
+
+  $ git cococo --auto-stash write_file new_file.txt wrote.
+STDOUT
     end
 
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])

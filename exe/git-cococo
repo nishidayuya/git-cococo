@@ -74,12 +74,12 @@ Detects following uncommitted changes:
 Run "git stash" and retry "git cococo":
 
   $ git stash --include-untracked &&
-    git cococo "$@" &&
+    git cococo $@ &&
     git stash pop
 
 Or, use "--auto-stash" option:
 
-  $ git cococo --auto-stash "$@"
+  $ git cococo --auto-stash $@
 EOF
     exit 1
   fi
