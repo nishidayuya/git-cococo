@@ -69,7 +69,7 @@ then
     cat <<EOF
 Detects following uncommitted changes:
 
-`git status --short | sed -e 's|^|  |'`
+$(git status --short | sed -e 's|^|  |')
 
 Run "git stash" and retry "git cococo":
 
