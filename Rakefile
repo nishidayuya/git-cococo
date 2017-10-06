@@ -18,4 +18,4 @@ task(:lint) do
   run("shellcheck exe/git-cococo")
 end
 
-task(default: :test)
+task(default: %i[test lint])
