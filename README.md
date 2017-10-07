@@ -28,11 +28,12 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/nishid
 
 ## Development
 
+* [Ruby](https://www.ruby-lang.org/): To run `rake` command and tests.
+* [Shellcheck](https://github.com/koalaman/shellcheck#installing): To run lint.
+
 Clone this project.
 
-`git cococo` is tested by Ruby script. We must install Ruby.
-
-Install related RubyGems and run tests:
+Install related RubyGems and run tests and lint:
 
 ```sh
 $ bundle
@@ -41,7 +42,7 @@ $ bundle exec rake
 
 Write some changes with tests.
 
-Run tests:
+Run tests and lint:
 
 ```sh
 $ bundle exec rake
