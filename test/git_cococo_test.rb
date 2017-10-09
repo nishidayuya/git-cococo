@@ -81,7 +81,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal("wrote.\nwrote.\n", exist_file_path.read)
   end
 
-  test("commit with escaped command commit message") do
+  test("commit with escaped command commit message: quote case") do
     exist_file_path = @repository_path / "exist_file.txt"
     exist_file_path.write("wrote.\n")
     @repository.git_commit(@repository.git_add(exist_file_path.basename))
@@ -104,6 +104,30 @@ class GitCococoTest < Test::Unit::TestCase
                  @repository.head.target.message)
     assert_equal(2, @repository.head.log.length)
     assert_equal("wrote.\n#{content}\n", exist_file_path.read)
+  end
+
+  test("commit with escaped command commit message: sh -c case") do
+    exist_file_path = @repository_path / "exist_file.txt"
+    exist_file_path.write("writed.\n")
+    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    assert_equal(1, @repository.head.log.length)
+    assert_git_status([])
+
+    command = [
+      *%w"git cococo sh -c",
+      "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
+    ]
+    Dir.chdir(@repository_path) do
+      run_command(*command)
+    end
+
+    assert_git_status([])
+    # TODO: last 2-quote characters are extra.
+    assert_equal(<<EOS, @repository.head.target.message)
+run: git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
+EOS
+    assert_equal(2, @repository.head.log.length)
+    assert_equal("wrote.\n", exist_file_path.read)
   end
 
   test("do nothing and exit 1 if uncommitted changes are exists") do

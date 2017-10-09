@@ -26,7 +26,7 @@ create_commit_message() {
   for arg in "$@"
   do
     need_quote=
-    expr "$arg" : '[ \$\"'\'']' > /dev/null && need_quote=1
+    expr "$arg" : '.*[ \$\"'\'']' > /dev/null && need_quote=1
 
     echo_n ' '
     test -n "$need_quote" && echo_n "'"
