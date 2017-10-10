@@ -35,12 +35,12 @@ create_commit_message() {
   done
 }
 
-auto_stash=
+autostash=
 while :
 do
   case "$1" in
-    --auto-stash)
-      auto_stash=1
+    --autostash)
+      autostash=1
       ;;
     -h|--help)
       echo_n "$USAGE"
@@ -64,7 +64,7 @@ done
 stashed=
 if uncommitted_changes_are_exists
 then
-  if test -z "$auto_stash"
+  if test -z "$autostash"
   then
     cat <<EOF
 Detects following uncommitted changes:
@@ -77,9 +77,9 @@ Run "git stash" and retry "git cococo":
     git cococo $@ &&
     git stash pop
 
-Or, use "--auto-stash" option:
+Or, use "--autostash" option:
 
-  $ git cococo --auto-stash $@
+  $ git cococo --autostash $@
 EOF
     exit 1
   fi

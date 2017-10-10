@@ -157,9 +157,9 @@ Run "git stash" and retry "git cococo":
     git cococo write_file new_file.txt wrote. &&
     git stash pop
 
-Or, use "--auto-stash" option:
+Or, use "--autostash" option:
 
-  $ git cococo --auto-stash write_file new_file.txt wrote.
+  $ git cococo --autostash write_file new_file.txt wrote.
 STDOUT
     end
 
@@ -168,7 +168,7 @@ STDOUT
     assert_equal(false, new_file_path.exist?)
   end
 
-  sub_test_case("--auto-stash") do
+  sub_test_case("--autostash") do
     test("stash, commit and unstash if uncommitted changes are exists") do
       exist_file_path = @repository_path / "exist_file.txt"
       exist_file_path.write("wrote.\n")
@@ -180,7 +180,7 @@ STDOUT
       assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
       assert_equal(1, @repository.head.log.length)
       new_file_path = @repository_path / "new_file.txt"
-      command = "git cococo --auto-stash write_file #{new_file_path.basename} wrote."
+      command = "git cococo --autostash write_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
         run_command(command)
       end
