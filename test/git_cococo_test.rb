@@ -142,9 +142,12 @@ EOS
     assert_equal(1, @repository.head.log.length)
     new_file_path = @repository_path / "new_file.txt"
     assert_equal(false, new_file_path.exist?)
-    command = "git cococo write_file #{new_file_path.basename} wrote."
+    command = [
+      *%w"git cococo sh -c",
+      "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
+    ]
     Dir.chdir(@repository_path) do
-      stdout, status = *Open3.capture2(command)
+      stdout, status = *Open3.capture2(*command)
       assert_equal(1, status.exitstatus)
       assert_equal(<<STDOUT, stdout)
 Detects following uncommitted changes:
@@ -154,12 +157,12 @@ Detects following uncommitted changes:
 Run "git stash" and retry "git cococo":
 
   $ git stash --include-untracked &&
-    git cococo write_file new_file.txt wrote. &&
+    git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\''' &&
     git stash pop
 
 Or, use "--autostash" option:
 
-  $ git cococo --autostash write_file new_file.txt wrote.
+  $ git cococo --autostash sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 STDOUT
     end
 

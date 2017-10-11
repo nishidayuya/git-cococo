@@ -21,18 +21,28 @@ escape_quote_argument() {
   echo_n "$1" | sed -e "s/'/'\\\\''/g"
 }
 
-create_commit_message() {
-  echo_n 'run: git cococo'
+escape_one_argument() {
+  need_quote=
+  expr "$1" : '.*[ \$\"'\'']' > /dev/null && need_quote=1
+
+  test -z "$need_quote" || echo_n "'"
+  escape_quote_argument "$1"
+  test -z "$need_quote" || echo_n "'"
+}
+
+escape_command_line() {
+  escape_one_argument "$1"
+  shift
   for arg in "$@"
   do
-    need_quote=
-    expr "$arg" : '.*[ \$\"'\'']' > /dev/null && need_quote=1
-
     echo_n ' '
-    test -n "$need_quote" && echo_n "'"
-    escape_quote_argument "$arg"
-    test -n "$need_quote" && echo_n "'"
+    escape_one_argument "$arg"
   done
+}
+
+create_commit_message() {
+  echo_n 'run: git cococo '
+  escape_command_line "$@"
 }
 
 autostash=
@@ -74,12 +84,12 @@ $(git status --short | sed -e 's|^|  |')
 Run "git stash" and retry "git cococo":
 
   $ git stash --include-untracked &&
-    git cococo $@ &&
+    git cococo $(escape_command_line "$@") &&
     git stash pop
 
 Or, use "--autostash" option:
 
-  $ git cococo --autostash $@
+  $ git cococo --autostash $(escape_command_line "$@")
 EOF
     exit 1
   fi
