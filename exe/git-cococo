@@ -45,6 +45,55 @@ create_commit_message() {
   escape_command_line "$@"
 }
 
+die_or_autostash_if_uncommitted_changes_are_exists() {
+  stashed=
+  if uncommitted_changes_are_exists
+  then
+    if test -z "$autostash"
+    then
+      cat <<EOF
+Detects following uncommitted changes:
+
+$(git status --short | sed -e 's|^|  |')
+
+Run "git stash" and retry "git cococo":
+
+  $ git stash --include-untracked &&
+    git cococo $(escape_command_line "$@") &&
+    git stash pop
+
+Or, use "--autostash" option:
+
+  $ git cococo --autostash $(escape_command_line "$@")
+EOF
+      exit 1
+    fi
+
+    git stash --quiet --include-untracked
+    stashed=1
+  fi
+}
+
+commit_uncommitted_chages() {
+  if uncommitted_changes_are_exists
+  then
+    git add --all
+    create_commit_message "$@" | git commit --quiet --file=-
+  else
+    echo No changes are detected.
+  fi
+}
+
+pop_stash_if_autostashed() {
+  if test x1 = "x$stashed"
+  then
+    # If only untracked files, always output "Already up to date!".
+    #
+    # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
+    git stash pop --quiet | sed -e '/^Already up to date!$/ d'
+  fi
+}
+
 main() {
   autostash=
   while :
@@ -72,49 +121,10 @@ main() {
     shift
   done
 
-  stashed=
-  if uncommitted_changes_are_exists
-  then
-    if test -z "$autostash"
-    then
-      cat <<EOF
-Detects following uncommitted changes:
-
-$(git status --short | sed -e 's|^|  |')
-
-Run "git stash" and retry "git cococo":
-
-  $ git stash --include-untracked &&
-    git cococo $(escape_command_line "$@") &&
-    git stash pop
-
-Or, use "--autostash" option:
-
-  $ git cococo --autostash $(escape_command_line "$@")
-EOF
-      exit 1
-    fi
-
-    git stash --quiet --include-untracked
-    stashed=1
-  fi
-
+  die_or_autostash_if_uncommitted_changes_are_exists "$@"
   "$@"
-  if uncommitted_changes_are_exists
-  then
-    git add --all
-    create_commit_message "$@" | git commit --quiet --file=-
-  else
-    echo No changes are detected.
-  fi
-
-  if test x1 = "x$stashed"
-  then
-    # If only untracked files, always output "Already up to date!".
-    #
-    # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
-    git stash pop --quiet | sed -e '/^Already up to date!$/ d'
-  fi
+  commit_uncommitted_chages "$@"
+  pop_stash_if_autostashed "$@"
 }
 
 main "$@"
