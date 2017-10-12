@@ -45,38 +45,39 @@ create_commit_message() {
   escape_command_line "$@"
 }
 
-autostash=
-while :
-do
-  case "$1" in
-    --autostash)
-      autostash=1
-      ;;
-    -h|--help)
-      echo_n "$USAGE"
-      exit
-      ;;
-    --)
-      shift
-      break
-      ;;
-    '')
-      echo_n "$USAGE" 1>&2
-      exit 1
-      ;;
-    *)
-      break
-      ;;
-  esac
-  shift
-done
+main() {
+  autostash=
+  while :
+  do
+    case "$1" in
+      --autostash)
+        autostash=1
+        ;;
+      -h|--help)
+        echo_n "$USAGE"
+        exit
+        ;;
+      --)
+        shift
+        break
+        ;;
+      '')
+        echo_n "$USAGE" 1>&2
+        exit 1
+        ;;
+      *)
+        break
+        ;;
+    esac
+    shift
+  done
 
-stashed=
-if uncommitted_changes_are_exists
-then
-  if test -z "$autostash"
+  stashed=
+  if uncommitted_changes_are_exists
   then
-    cat <<EOF
+    if test -z "$autostash"
+    then
+      cat <<EOF
 Detects following uncommitted changes:
 
 $(git status --short | sed -e 's|^|  |')
@@ -91,26 +92,29 @@ Or, use "--autostash" option:
 
   $ git cococo --autostash $(escape_command_line "$@")
 EOF
-    exit 1
+      exit 1
+    fi
+
+    git stash --quiet --include-untracked
+    stashed=1
   fi
 
-  git stash --quiet --include-untracked
-  stashed=1
-fi
+  "$@"
+  if uncommitted_changes_are_exists
+  then
+    git add --all
+    create_commit_message "$@" | git commit --quiet --file=-
+  else
+    echo No changes are detected.
+  fi
 
-"$@"
-if uncommitted_changes_are_exists
-then
-  git add --all
-  create_commit_message "$@" | git commit --quiet --file=-
-else
-  echo No changes are detected.
-fi
+  if test x1 = "x$stashed"
+  then
+    # If only untracked files, always output "Already up to date!".
+    #
+    # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
+    git stash pop --quiet | sed -e '/^Already up to date!$/ d'
+  fi
+}
 
-if test x1 = "x$stashed"
-then
-  # If only untracked files, always output "Already up to date!".
-  #
-  # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
-  git stash pop --quiet | sed -e '/^Already up to date!$/ d'
-fi
+main "$@"
