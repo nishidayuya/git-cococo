@@ -95,6 +95,7 @@ pop_stash_if_autostashed() {
 }
 
 main() {
+  # parse git cococo options.
   autostash=
   while :
   do
