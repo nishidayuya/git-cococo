@@ -123,7 +123,7 @@ main() {
   done
 
   die_or_autostash_if_uncommitted_changes_are_exists "$@"
-  "$@"
+  "$@" # run command.
   commit_uncommitted_chages "$@"
   pop_stash_if_autostashed "$@"
 }
