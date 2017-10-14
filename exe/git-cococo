@@ -47,11 +47,11 @@ create_commit_message() {
 
 die_or_autostash_if_uncommitted_changes_are_exists() {
   stashed=
-  if uncommitted_changes_are_exists
+  uncommitted_changes_are_exists || return 0
+
+  if test -z "$autostash"
   then
-    if test -z "$autostash"
-    then
-      cat <<EOF
+    cat <<EOF
 Detects following uncommitted changes:
 
 $(git status --short | sed -e 's|^|  |')
@@ -66,12 +66,11 @@ Or, use "--autostash" option:
 
   $ git cococo --autostash $(escape_command_line "$@")
 EOF
-      exit 1
-    fi
-
-    git stash --quiet --include-untracked
-    stashed=1
+    exit 1
   fi
+
+  git stash --quiet --include-untracked
+  stashed=1
 }
 
 commit_uncommitted_chages() {
