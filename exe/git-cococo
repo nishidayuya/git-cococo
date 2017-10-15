@@ -14,7 +14,7 @@ echo_n() {
 }
 
 uncommitted_changes_are_exists() {
-  test x != "x$(git status --short)"
+  test -n "$(git status --short)"
 }
 
 escape_quote_argument() {
@@ -84,7 +84,7 @@ commit_uncommitted_chages() {
 }
 
 pop_stash_if_autostashed() {
-  if test x1 = "x$stashed"
+  if test -n "$stashed"
   then
     # If only untracked files, always output "Already up to date!".
     #
