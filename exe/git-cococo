@@ -84,13 +84,12 @@ commit_uncommitted_chages() {
 }
 
 pop_stash_if_autostashed() {
-  if test -n "$stashed"
-  then
-    # If only untracked files, always output "Already up to date!".
-    #
-    # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
-    git stash pop --quiet | sed -e '/^Already up to date!$/ d'
-  fi
+  test -n "$stashed" || return 0
+
+  # If only untracked files, always output "Already up to date!".
+  #
+  # https://github.com/git/git/blob/v2.15.0/merge-recursive.c#L1954
+  git stash pop --quiet | sed -e '/^Already up to date!$/ d'
 }
 
 main() {
