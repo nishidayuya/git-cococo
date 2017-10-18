@@ -73,7 +73,7 @@ EOF
   stashed=1
 }
 
-commit_uncommitted_chages() {
+commit_uncommitted_changes() {
   if uncommitted_changes_are_exists
   then
     git add --all
@@ -122,7 +122,7 @@ main() {
 
   die_or_autostash_if_uncommitted_changes_are_exists "$@"
   "$@" # run command.
-  commit_uncommitted_chages "$@"
+  commit_uncommitted_changes "$@"
   pop_stash_if_autostashed "$@"
 }
 
