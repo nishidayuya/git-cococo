@@ -22,6 +22,12 @@ Run `sed` command and commit its changes with commit message "run: git cococo se
 $ git cococo sed -e s/foo/bar/g a.txt
 ```
 
+Replace `writed` to `wrote` all of git tracked files and commit with re-runnable commit message.
+
+```sh
+$ git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e s/writed/wrote/g'
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nishidayuya/git-cococo .
