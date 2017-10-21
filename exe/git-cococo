@@ -54,7 +54,7 @@ die_or_autostash_if_uncommitted_changes_are_exists() {
     cat <<EOF
 Detects following uncommitted changes:
 
-$(git status --short | sed -e 's|^|  |')
+$(git status --short | sed -e 's|^|  |g')
 
 Run "git stash" and retry "git cococo":
 
