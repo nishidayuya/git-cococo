@@ -37,7 +37,7 @@ class GitCococoTest < Test::Unit::TestCase
   setup do
     d = Dir.mktmpdir
     @repository_path = Pathname(d)
-    @repository = Rugged::Repository.init_at(d)
+    init_repository
   end
 
   teardown do
@@ -194,6 +194,60 @@ STDOUT
     end
   end
 
+  sub_test_case("--init") do
+    setup do
+      (@repository_path / ".git").rmtree
+      @repository = nil
+    end
+
+    test("run git init, command and commit in current directory") do
+      new_file_path = @repository_path / "new_file.txt"
+      command = "git cococo --init write_file #{new_file_path.basename} wrote."
+      Dir.chdir(@repository_path) do
+        run_command(command)
+      end
+
+      @repository = Rugged::Repository.new((@repository_path / ".git").to_s)
+      assert_git_status([])
+      assert_equal("run: #{command}\n", @repository.head.target.message)
+      assert_equal(1, @repository.head.log.length)
+      assert_equal("wrote.\n", new_file_path.read)
+    end
+
+    test("cannot use with --autostash option") do
+      new_file_path = @repository_path / "new_file.txt"
+      command = "git cococo --autostash --init write_file #{new_file_path.basename} wrote."
+      Dir.chdir(@repository_path) do
+        stdout, status = *Open3.capture2(command)
+        assert_equal(1, status.exitstatus)
+        assert_equal(<<STDOUT, stdout)
+Cannot use both "--autostash" option and "--init" option.
+STDOUT
+      end
+
+      assert_equal([], @repository_path.children)
+    end
+
+    test("die if already .git directory is exist") do
+      init_repository
+      new_file_path = @repository_path / "new_file.txt"
+      command = "git cococo --init write_file #{new_file_path.basename} wrote."
+      Dir.chdir(@repository_path) do
+        stdout, status = *Open3.capture2(command)
+        assert_equal(1, status.exitstatus)
+        assert_equal(<<STDOUT, stdout)
+"./.git" is already exists.
+
+Run without "--init" option:
+
+  $ git cococo write_file #{new_file_path.basename} wrote.
+STDOUT
+      end
+
+      assert_equal([@repository_path / ".git"], @repository_path.children)
+    end
+  end
+
   private
 
   class RunCommandError < StandardError
@@ -205,6 +259,10 @@ STDOUT
       actual << args
     end
     assert_equal(expected, actual)
+  end
+
+  def init_repository
+    @repository = Rugged::Repository.init_at(@repository_path.to_s)
   end
 
   def run_command(*command)
