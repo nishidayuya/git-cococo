@@ -57,21 +57,38 @@ die_if_both_autostash_and_init() {
   exit 1
 }
 
-run_git_init_if_init_mode() {
+check_init_target_directory_if_init_mode() {
   test -n "$init" || return 0
 
-  d="$init/.git"
-  if test -e "$d"
-  then
-    cat <<EOF
-"$d" is already exists.
+  # allow nonexistent
+  test -e "$init" || return 0
+
+  # allow empty directory
+  test -n "$(find "$init" -mindepth 1 -maxdepth 1 |
+             sed -e '/^\.$/ d' -e '/^\.\.$/ d')" ||
+    return 0
+
+  # disallow
+  cat <<EOF
+"$init" directory should be nonexistent or empty.
+git cococo found following files:
+
+$(
+  # shellcheck disable=SC2012
+  ls -al "$init" | sed -e 's|^|  |g'
+)
 
 Run without "--init" option:
 
   $ git cococo $(escape_command_line "$@")
 EOF
-    exit 1
-  fi
+  exit 1
+}
+
+run_git_init_if_init_mode() {
+  test -n "$init" || return 0
+
+  # do not check ".git" existent.
 
   git init --quiet
 }
@@ -156,6 +173,7 @@ main() {
   done
   die_if_both_autostash_and_init
 
+  check_init_target_directory_if_init_mode "$@"
   run_git_init_if_init_mode "$@"
   die_or_autostash_if_uncommitted_changes_are_exists "$@"
   "$@" # run command.

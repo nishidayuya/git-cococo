@@ -235,13 +235,27 @@ STDOUT
       Dir.chdir(@repository_path) do
         stdout, status = *Open3.capture2(command)
         assert_equal(1, status.exitstatus)
-        assert_equal(<<STDOUT, stdout)
-"./.git" is already exists.
+        expected_stdout_pattern = <<EOS
+"\\." directory should be nonexistent or empty\\.
+git cococo found following files:
+
+  .*?
+  d.*? \\.
+  d.*? \\.\\.
+  d.*? \\.git
 
 Run without "--init" option:
 
-  $ git cococo write_file #{new_file_path.basename} wrote.
-STDOUT
+  \\$ git cococo write_file #{Regexp.escape(new_file_path.basename.to_s)} wrote\\.
+EOS
+        # find invalid line.
+        expected_stdout_pattern.each_line(chomp: true).with_index do |l, i|
+          assert_match(Regexp.compile("^#{l}$"), stdout, "i=#{i + 1}")
+        end
+        # assert line order.
+        assert_match(Regexp.compile("\\A#{expected_stdout_pattern}\\Z",
+                                    Regexp::MULTILINE),
+                     stdout)
       end
 
       assert_equal([@repository_path / ".git"], @repository_path.children)
