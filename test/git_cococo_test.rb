@@ -200,7 +200,7 @@ STDOUT
       @repository = nil
     end
 
-    test("run git init, command and commit in current directory") do
+    test("run command, git init and commit in current directory") do
       new_file_path = @repository_path / "new_file.txt"
       command = "git cococo --init write_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
