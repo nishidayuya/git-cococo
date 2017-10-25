@@ -57,7 +57,7 @@ die_if_both_autostash_and_init() {
   exit 1
 }
 
-check_init_target_directory_if_init_mode() {
+die_if_init_target_is_existent_or_not_empty() {
   test -n "$init" || return 0
 
   # allow nonexistent
@@ -141,7 +141,7 @@ pop_stash_if_autostashed() {
 }
 
 run_in_init_mode() {
-  check_init_target_directory_if_init_mode "$@"
+  die_if_init_target_is_existent_or_not_empty "$@"
   "$@" # run command.
   run_git_init_if_init_mode "$@"
   commit_uncommitted_changes "$@"
