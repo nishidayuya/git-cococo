@@ -85,7 +85,7 @@ EOF
   exit 1
 }
 
-run_git_init_if_init_mode() {
+run_git_init() {
   test -n "$init" || return 0
 
   # do not check ".git" existent.
@@ -143,7 +143,7 @@ pop_stash_if_autostashed() {
 run_in_init_mode() {
   die_if_init_target_is_existent_or_not_empty "$@"
   "$@" # run command.
-  run_git_init_if_init_mode "$@"
+  run_git_init "$@"
   commit_uncommitted_changes "$@"
   pop_stash_if_autostashed "$@"
 }
