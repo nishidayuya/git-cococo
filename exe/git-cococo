@@ -58,8 +58,6 @@ die_if_both_autostash_and_init() {
 }
 
 die_if_init_target_is_existent_or_not_empty() {
-  test -n "$init" || return 0
-
   # allow nonexistent
   test -e "$init" || return 0
 
@@ -86,8 +84,6 @@ EOF
 }
 
 run_git_init() {
-  test -n "$init" || return 0
-
   # do not check ".git" existent.
 
   git init --quiet
