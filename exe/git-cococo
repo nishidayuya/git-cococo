@@ -141,7 +141,6 @@ run_in_init_mode() {
   "$@" # run command.
   run_git_init "$@"
   commit_uncommitted_changes "$@"
-  pop_stash_if_autostashed "$@"
 }
 
 run_in_git_work_directory() {
