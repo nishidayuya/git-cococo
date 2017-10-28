@@ -214,6 +214,25 @@ STDOUT
       assert_equal("wrote.\n", new_file_path.read)
     end
 
+    test("run command in current directory and git init and commit specified directory") do
+      command = [
+        *%w"git cococo --init=blog sh -c",
+        "mkdir blog && write_file blog/2017-10-25-sunny.txt Today is sunny!",
+      ]
+      Dir.chdir(@repository_path) do
+        run_command(*command)
+      end
+
+      repository_path = @repository_path / "blog"
+      @repository = Rugged::Repository.new((repository_path / ".git").to_s)
+      assert_git_status([])
+      assert_equal("run: #{command[0 .. -2].join(" ")} '#{command[-1]}'\n",
+                   @repository.head.target.message)
+      assert_equal(1, @repository.head.log.length)
+      assert_equal("Today is sunny!\n",
+                   (repository_path / "2017-10-25-sunny.txt").read)
+    end
+
     test("cannot use with --autostash option") do
       new_file_path = @repository_path / "new_file.txt"
       command = "git cococo --autostash --init write_file #{new_file_path.basename} wrote."

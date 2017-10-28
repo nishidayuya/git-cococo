@@ -41,7 +41,11 @@ escape_command_line() {
 }
 
 git_cococo_options() {
-  test -z "$init" || echo_n '--init '
+  case "$init" in
+    '') : ;;
+    .) echo_n '--init ' ;;
+    *) echo_n "--init=$init " ;;
+  esac
 }
 
 create_commit_message() {
@@ -139,6 +143,7 @@ pop_stash_if_autostashed() {
 run_in_init_mode() {
   die_if_init_target_is_existent_or_not_empty "$@"
   "$@" # run command.
+  cd "$init"
   run_git_init "$@"
   commit_uncommitted_changes "$@"
 }
@@ -162,6 +167,9 @@ main() {
         ;;
       --init)
         init=.
+        ;;
+      --init=*)
+        init=$(echo "$1" | sed -e 's/.*=//')
         ;;
       -h|--help)
         echo_n "$USAGE"
