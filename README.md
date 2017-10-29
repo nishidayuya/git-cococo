@@ -28,6 +28,20 @@ Replace `writed` to `wrote` all of git tracked files and commit with re-runnable
 $ git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e s/writed/wrote/g'
 ```
 
+Examples for Rubyists:
+
+```sh
+$ git cococo --init bundle init
+$ git cococo bundle add rake
+$ git cococo bundle update nokogiri
+
+$ n=new_awesome_gem && git cococo --init=$n bundle gem $n
+
+$ n=blog && git cococo --init=$n rails new $n
+$ git cococo bin/rails generate scaffold post title body:text published_at:datetime
+$ git cococo bin/rails db:migrate
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nishidayuya/git-cococo .
