@@ -42,6 +42,13 @@ $ git cococo bin/rails generate scaffold post title body:text published_at:datet
 $ git cococo bin/rails db:migrate
 ```
 
+Examples for Noders:
+
+```sh
+$ git cococo --init npm init --yes
+$ git cococo npm install --save xmlhttprequest
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nishidayuya/git-cococo .
