@@ -1,6 +1,7 @@
 # `git cococo`: git COmmit COmpletely COmmand output
 
 [![License X11](https://img.shields.io/badge/license-X11-blue.svg)](https://raw.githubusercontent.com/nishidayuya/git-cococo/master/LICENSE.txt)
+[![Build Status](https://img.shields.io/travis/nishidayuya/git-cococo.svg)](https://travis-ci.org/nishidayuya/git-cococo)
 
 ## Requirements
 
