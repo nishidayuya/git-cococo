@@ -88,7 +88,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    content = " \"'$PATH  # \\"
+    content = " \"'$PATH  # \\ "
     command = [
       *%w"git cococo write_file",
       exist_file_path.basename.to_s,
