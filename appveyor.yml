@@ -1,0 +1,22 @@
+install:
+  - set PATH=C:\Ruby25-x64\bin;%PATH%
+  - git config --global user.name git-cococo
+  - git config --global user.email git-cococo@example.org
+  - git config --global core.autocrlf false
+  - gem update --system
+  - gem update bundler
+  - bundle install
+
+build: off
+
+before_test:
+  - sh --version
+  - git version
+  - ruby -v
+  - gem -v
+  - bundle -v
+
+test_script:
+  - bundle exec rake test
+
+deploy: off
