@@ -1,3 +1,6 @@
+cache:
+  - vendor/bundle
+
 install:
   - set PATH=C:\Ruby25-x64\bin;%PATH%
   - git config --global user.name git-cococo
@@ -5,6 +8,7 @@ install:
   - git config --global core.autocrlf false
   - gem update --system
   - gem update bundler
+  - bundle config --local path vendor/bundle
   - bundle install
 
 build: off
