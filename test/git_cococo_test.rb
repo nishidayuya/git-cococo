@@ -9,8 +9,8 @@ top_src_path = Pathname(__dir__).parent
 ENV["PATH"] = [
   top_src_path / "exe",
   top_src_path / "test/bin",
-  *ENV["PATH"].split(":"),
-].map(&:to_s).join(":")
+  *ENV["PATH"].split(File::PATH_SEPARATOR),
+].map(&:to_s).join(File::PATH_SEPARATOR)
 
 Rugged::Repository.class_eval do
   def git_add(path)
@@ -88,7 +88,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    content = " \"'$PATH  # \\"
+    content = " \"'$PATH  # \\ "
     command = [
       *%w"git cococo write_file",
       exist_file_path.basename.to_s,
