@@ -18,7 +18,9 @@ uncommitted_changes_are_exists() {
 }
 
 escape_quote_argument() {
-  echo_n "$1" | sed -e "s/'/'\\\\''/g"
+  # In MacOSX, sed adds "\n" to tail of stream.
+  # echo_n rejects tail "\n".
+  echo_n "$(echo "$1" | sed -e s/\'/\'\\\\\'\'/g)"
 }
 
 escape_one_argument() {

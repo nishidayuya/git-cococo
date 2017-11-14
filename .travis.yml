@@ -1,9 +1,19 @@
 language: ruby
 
-rvm:
-  - 2.5
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: fase
+      rvm: 2.5
+    - os: osx
+      osx_image: xcode9.2
+      rvm: 2.5
 
-cache: bundler
+cache:
+  bundler: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
 
 addons:
   apt:
@@ -11,6 +21,9 @@ addons:
       - shellcheck
 
 before_install:
+  - if test osx = "$TRAVIS_OS_NAME"; then brew install shellcheck; fi
+  - git config --global user.name git-cococo
+  - git config --global user.email git-cococo@example.org
   - gem update --system
   - gem --version
   - gem update bundler
