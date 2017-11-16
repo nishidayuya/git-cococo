@@ -51,9 +51,9 @@ git_cococo_options() {
 }
 
 create_commit_message() {
-  echo_n 'run: git cococo '
-  git_cococo_options
-  escape_command_line "$@"
+  cat <<EOF
+run: git cococo $(git_cococo_options)$(escape_command_line "$@")
+EOF
 }
 
 die_if_both_autostash_and_init() {
