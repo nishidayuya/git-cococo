@@ -140,8 +140,6 @@ EOS
 
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
     assert_equal(1, @repository.head.log.length)
-    new_file_path = @repository_path / "new_file.txt"
-    assert_equal(false, new_file_path.exist?)
     command = [
       *%w"git cococo sh -c",
       "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
@@ -168,7 +166,6 @@ STDOUT
 
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
     assert_equal(1, @repository.head.log.length)
-    assert_equal(false, new_file_path.exist?)
   end
 
   sub_test_case("--autostash") do
