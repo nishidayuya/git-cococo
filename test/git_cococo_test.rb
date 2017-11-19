@@ -45,9 +45,7 @@ class GitCococoTest < Test::Unit::TestCase
   end
 
   test("commit new file after command run") do
-    exist_file_path = @repository_path / "exist_file.txt"
-    exist_file_path.write("wrote.\n")
-    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    prepare_committed_file
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
@@ -64,13 +62,11 @@ class GitCococoTest < Test::Unit::TestCase
   end
 
   test("commit exist file after command run") do
-    exist_file_path = @repository_path / "exist_file.txt"
-    exist_file_path.write("wrote.\n")
-    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    prepare_committed_file
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    command = "git cococo write_file #{exist_file_path.basename} wrote."
+    command = "git cococo write_file #{@exist_file_path.relative_path_from(@repository_path)} wrote."
     Dir.chdir(@repository_path) do
       run_command(command)
     end
@@ -78,20 +74,18 @@ class GitCococoTest < Test::Unit::TestCase
     assert_git_status([])
     assert_equal("run: #{command}\n", @repository.head.target.message)
     assert_equal(2, @repository.head.log.length)
-    assert_equal("wrote.\nwrote.\n", exist_file_path.read)
+    assert_equal("wrote.\nwrote.\n", @exist_file_path.read)
   end
 
   test("commit with escaped command commit message: quote case") do
-    exist_file_path = @repository_path / "exist_file.txt"
-    exist_file_path.write("wrote.\n")
-    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    prepare_committed_file
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
     content = " \"'$PATH  # \\ "
     command = [
       *%w"git cococo write_file",
-      exist_file_path.basename.to_s,
+      @exist_file_path.relative_path_from(@repository_path).to_s,
       content,
     ]
     Dir.chdir(@repository_path) do
@@ -103,13 +97,11 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal("run: #{command[0 .. -2].join(" ")} '#{expected_content}'\n",
                  @repository.head.target.message)
     assert_equal(2, @repository.head.log.length)
-    assert_equal("wrote.\n#{content}\n", exist_file_path.read)
+    assert_equal("wrote.\n#{content}\n", @exist_file_path.read)
   end
 
   test("commit with escaped command commit message: sh -c case") do
-    exist_file_path = @repository_path / "exist_file.txt"
-    exist_file_path.write("writed.\n")
-    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    prepare_committed_file(content: "writed.\n")
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
@@ -127,13 +119,11 @@ class GitCococoTest < Test::Unit::TestCase
 run: git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 EOS
     assert_equal(2, @repository.head.log.length)
-    assert_equal("wrote.\n", exist_file_path.read)
+    assert_equal("wrote.\n", @exist_file_path.read)
   end
 
   test("do nothing and exit 1 if uncommitted changes are exists") do
-    exist_file_path = @repository_path / "exist_file.txt"
-    exist_file_path.write("wrote.\n")
-    @repository.git_commit(@repository.git_add(exist_file_path.basename))
+    prepare_committed_file
 
     uncommitted_file_path = @repository_path / "uncommitted_file.txt"
     uncommitted_file_path.write("wrote.\n")
@@ -170,9 +160,7 @@ STDOUT
 
   sub_test_case("--autostash") do
     test("stash, commit and unstash if uncommitted changes are exists") do
-      exist_file_path = @repository_path / "exist_file.txt"
-      exist_file_path.write("wrote.\n")
-      @repository.git_commit(@repository.git_add(exist_file_path.basename))
+      prepare_committed_file
 
       uncommitted_file_path = @repository_path / "uncommitted_file.txt"
       uncommitted_file_path.write("wrote.\n")
@@ -299,5 +287,13 @@ EOS
     if !system(*command)
       raise RunCommandError, "failure: #{command.inspect}"
     end
+  end
+
+  def prepare_committed_file(path: "exist_file.txt", content: "wrote.\n")
+    @exist_file_path = @repository_path / path
+    @exist_file_path.parent.mkpath
+    @exist_file_path.write(content)
+    relative_path = @exist_file_path.relative_path_from(@repository_path)
+    @repository.git_commit(@repository.git_add(relative_path))
   end
 end
