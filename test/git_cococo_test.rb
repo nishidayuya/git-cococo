@@ -50,7 +50,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_git_status([])
 
     new_file_path = @repository_path / "new_file.txt"
-    command = "git cococo write_file #{new_file_path.basename} wrote."
+    command = "git cococo append_file #{new_file_path.basename} wrote."
     Dir.chdir(@repository_path) do
       run_command(command)
     end
@@ -66,7 +66,7 @@ class GitCococoTest < Test::Unit::TestCase
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    command = "git cococo write_file #{@exist_file_path.relative_path_from(@repository_path)} wrote."
+    command = "git cococo append_file #{@exist_file_path.relative_path_from(@repository_path)} wrote."
     Dir.chdir(@repository_path) do
       run_command(command)
     end
@@ -84,7 +84,7 @@ class GitCococoTest < Test::Unit::TestCase
 
     content = " \"'$PATH  # \\ "
     command = [
-      *%w"git cococo write_file",
+      *%w"git cococo append_file",
       @exist_file_path.relative_path_from(@repository_path).to_s,
       content,
     ]
@@ -168,7 +168,7 @@ STDOUT
       assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
       assert_equal(1, @repository.head.log.length)
       new_file_path = @repository_path / "new_file.txt"
-      command = "git cococo --autostash write_file #{new_file_path.basename} wrote."
+      command = "git cococo --autostash append_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
         run_command(command)
       end
@@ -187,7 +187,7 @@ STDOUT
 
     test("run command, git init and commit in current directory") do
       new_file_path = @repository_path / "new_file.txt"
-      command = "git cococo --init write_file #{new_file_path.basename} wrote."
+      command = "git cococo --init append_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
         run_command(command)
       end
@@ -202,7 +202,7 @@ STDOUT
     test("run command in current directory and git init and commit specified directory") do
       command = [
         *%w"git cococo --init=blog sh -c",
-        "mkdir blog && write_file blog/2017-10-25-sunny.txt Today is sunny!",
+        "mkdir blog && append_file blog/2017-10-25-sunny.txt Today is sunny!",
       ]
       Dir.chdir(@repository_path) do
         run_command(*command)
@@ -220,7 +220,7 @@ STDOUT
 
     test("cannot use with --autostash option") do
       new_file_path = @repository_path / "new_file.txt"
-      command = "git cococo --autostash --init write_file #{new_file_path.basename} wrote."
+      command = "git cococo --autostash --init append_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
         stdout, status = *Open3.capture2(command)
         assert_equal(1, status.exitstatus)
@@ -235,7 +235,7 @@ STDOUT
     test("die if already .git directory is exist") do
       init_repository
       new_file_path = @repository_path / "new_file.txt"
-      command = "git cococo --init write_file #{new_file_path.basename} wrote."
+      command = "git cococo --init append_file #{new_file_path.basename} wrote."
       Dir.chdir(@repository_path) do
         stdout, status = *Open3.capture2(command)
         assert_equal(1, status.exitstatus)
@@ -250,7 +250,7 @@ git cococo found following files:
 
 Run without "--init" option:
 
-  \\$ git cococo write_file #{Regexp.escape(new_file_path.basename.to_s)} wrote\\.
+  \\$ git cococo append_file #{Regexp.escape(new_file_path.basename.to_s)} wrote\\.
 EOS
         # find invalid line.
         expected_stdout_pattern.each_line(chomp: true).with_index do |l, i|
