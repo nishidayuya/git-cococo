@@ -201,4 +201,4 @@ main() {
   fi
 }
 
-main "$@"
+test git-cococo != "$(basename "$0")" || main "$@"
