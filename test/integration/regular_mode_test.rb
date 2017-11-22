@@ -5,7 +5,7 @@ require "tmpdir"
 require "rugged"
 require "test/unit"
 
-top_src_path = Pathname(__dir__).parent
+top_src_path = Pathname(__dir__).parent.parent
 ENV["PATH"] = [
   top_src_path / "exe",
   top_src_path / "test/bin",
@@ -33,7 +33,7 @@ Rugged::Repository.class_eval do
   end
 end
 
-class GitCococoTest < Test::Unit::TestCase
+class RegularModeTest < Test::Unit::TestCase
   setup do
     d = Dir.mktmpdir
     @repository_path = Pathname(d)
