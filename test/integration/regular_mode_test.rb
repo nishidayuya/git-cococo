@@ -1,37 +1,4 @@
-require "open3"
-require "pathname"
-require "tmpdir"
-
-require "rugged"
-require "test/unit"
-
-top_src_path = Pathname(__dir__).parent.parent
-ENV["PATH"] = [
-  top_src_path / "exe",
-  top_src_path / "test/bin",
-  *ENV["PATH"].split(File::PATH_SEPARATOR),
-].map(&:to_s).join(File::PATH_SEPARATOR)
-
-Rugged::Repository.class_eval do
-  def git_add(path)
-    index.add(path.to_s)
-    Dir.chdir(workdir) do
-    end
-    commit_tree = index.write_tree(self)
-    index.write
-    return commit_tree
-  end
-
-  def git_commit(tree, **options)
-    options[:parents] ||= empty? ? [] : [head.target]
-    return Rugged::Commit.create(self,
-                                 **{
-                                   message: "commit.",
-                                   tree: tree,
-                                   update_ref: "HEAD",
-                                 }.merge(options))
-  end
-end
+require "test_helper"
 
 class RegularModeTest < Test::Unit::TestCase
   setup do
