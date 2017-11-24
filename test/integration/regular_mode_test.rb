@@ -3,12 +3,12 @@ require "test_helper"
 class RegularModeTest < Test::Unit::TestCase
   setup do
     d = Dir.mktmpdir
-    @repository_path = Pathname(d)
+    @working_path = Pathname(d)
     init_repository
   end
 
   teardown do
-    @repository_path.rmtree
+    @working_path.rmtree
   end
 
   test("commit new file after command run") do
@@ -16,9 +16,9 @@ class RegularModeTest < Test::Unit::TestCase
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    new_file_path = @repository_path / "new_file.txt"
+    new_file_path = @working_path / "new_file.txt"
     command = "git cococo append_file #{new_file_path.basename} wrote."
-    Dir.chdir(@repository_path) do
+    Dir.chdir(@working_path) do
       run_command(command)
     end
 
@@ -33,8 +33,8 @@ class RegularModeTest < Test::Unit::TestCase
     assert_equal(1, @repository.head.log.length)
     assert_git_status([])
 
-    command = "git cococo append_file #{@exist_file_path.relative_path_from(@repository_path)} wrote."
-    Dir.chdir(@repository_path) do
+    command = "git cococo append_file #{@exist_file_path.relative_path_from(@working_path)} wrote."
+    Dir.chdir(@working_path) do
       run_command(command)
     end
 
@@ -52,10 +52,10 @@ class RegularModeTest < Test::Unit::TestCase
     content = " \"'$PATH  # \\ "
     command = [
       *%w"git cococo append_file",
-      @exist_file_path.relative_path_from(@repository_path).to_s,
+      @exist_file_path.relative_path_from(@working_path).to_s,
       content,
     ]
-    Dir.chdir(@repository_path) do
+    Dir.chdir(@working_path) do
       run_command(*command)
     end
 
@@ -76,7 +76,7 @@ class RegularModeTest < Test::Unit::TestCase
       *%w"git cococo sh -c",
       "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
     ]
-    Dir.chdir(@repository_path) do
+    Dir.chdir(@working_path) do
       run_command(*command)
     end
 
@@ -92,7 +92,7 @@ EOS
   test("do nothing and exit 1 if uncommitted changes are exists") do
     prepare_committed_file
 
-    uncommitted_file_path = @repository_path / "uncommitted_file.txt"
+    uncommitted_file_path = @working_path / "uncommitted_file.txt"
     uncommitted_file_path.write("wrote.\n")
 
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
@@ -101,7 +101,7 @@ EOS
       *%w"git cococo sh -c",
       "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
     ]
-    Dir.chdir(@repository_path) do
+    Dir.chdir(@working_path) do
       stdout, status = *Open3.capture2(*command)
       assert_equal(1, status.exitstatus)
       assert_equal(<<STDOUT, stdout)
@@ -129,14 +129,14 @@ STDOUT
     test("stash, commit and unstash if uncommitted changes are exists") do
       prepare_committed_file
 
-      uncommitted_file_path = @repository_path / "uncommitted_file.txt"
+      uncommitted_file_path = @working_path / "uncommitted_file.txt"
       uncommitted_file_path.write("wrote.\n")
 
       assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
       assert_equal(1, @repository.head.log.length)
-      new_file_path = @repository_path / "new_file.txt"
+      new_file_path = @working_path / "new_file.txt"
       command = "git cococo --autostash append_file #{new_file_path.basename} wrote."
-      Dir.chdir(@repository_path) do
+      Dir.chdir(@working_path) do
         run_command(command)
       end
 
@@ -148,18 +148,18 @@ STDOUT
 
   sub_test_case("--init") do
     setup do
-      (@repository_path / ".git").rmtree
+      (@working_path / ".git").rmtree
       @repository = nil
     end
 
     test("run command, git init and commit in current directory") do
-      new_file_path = @repository_path / "new_file.txt"
+      new_file_path = @working_path / "new_file.txt"
       command = "git cococo --init append_file #{new_file_path.basename} wrote."
-      Dir.chdir(@repository_path) do
+      Dir.chdir(@working_path) do
         run_command(command)
       end
 
-      @repository = Rugged::Repository.new((@repository_path / ".git").to_s)
+      @repository = Rugged::Repository.new((@working_path / ".git").to_s)
       assert_git_status([])
       assert_equal("run: #{command}\n", @repository.head.target.message)
       assert_equal(1, @repository.head.log.length)
@@ -171,11 +171,11 @@ STDOUT
         *%w"git cococo --init=blog sh -c",
         "mkdir blog && append_file blog/2017-10-25-sunny.txt Today is sunny!",
       ]
-      Dir.chdir(@repository_path) do
+      Dir.chdir(@working_path) do
         run_command(*command)
       end
 
-      repository_path = @repository_path / "blog"
+      repository_path = @working_path / "blog"
       @repository = Rugged::Repository.new((repository_path / ".git").to_s)
       assert_git_status([])
       assert_equal("run: #{command[0 .. -2].join(" ")} '#{command[-1]}'\n",
@@ -186,9 +186,9 @@ STDOUT
     end
 
     test("cannot use with --autostash option") do
-      new_file_path = @repository_path / "new_file.txt"
+      new_file_path = @working_path / "new_file.txt"
       command = "git cococo --autostash --init append_file #{new_file_path.basename} wrote."
-      Dir.chdir(@repository_path) do
+      Dir.chdir(@working_path) do
         stdout, status = *Open3.capture2(command)
         assert_equal(1, status.exitstatus)
         assert_equal(<<STDOUT, stdout)
@@ -196,14 +196,14 @@ Cannot use both "--autostash" option and "--init" option.
 STDOUT
       end
 
-      assert_equal([], @repository_path.children)
+      assert_equal([], @working_path.children)
     end
 
     test("die if already .git directory is exist") do
       init_repository
-      new_file_path = @repository_path / "new_file.txt"
+      new_file_path = @working_path / "new_file.txt"
       command = "git cococo --init append_file #{new_file_path.basename} wrote."
-      Dir.chdir(@repository_path) do
+      Dir.chdir(@working_path) do
         stdout, status = *Open3.capture2(command)
         assert_equal(1, status.exitstatus)
         expected_stdout_pattern = <<EOS
@@ -229,7 +229,7 @@ EOS
                      stdout)
       end
 
-      assert_equal([@repository_path / ".git"], @repository_path.children)
+      assert_equal([@working_path / ".git"], @working_path.children)
     end
   end
 
@@ -247,7 +247,7 @@ EOS
   end
 
   def init_repository
-    @repository = Rugged::Repository.init_at(@repository_path.to_s)
+    @repository = Rugged::Repository.init_at(@working_path.to_s)
   end
 
   def run_command(*command)
@@ -257,10 +257,10 @@ EOS
   end
 
   def prepare_committed_file(path: "exist_file.txt", content: "wrote.\n")
-    @exist_file_path = @repository_path / path
+    @exist_file_path = @working_path / path
     @exist_file_path.parent.mkpath
     @exist_file_path.write(content)
-    relative_path = @exist_file_path.relative_path_from(@repository_path)
+    relative_path = @exist_file_path.relative_path_from(@working_path)
     @repository.git_commit(@repository.git_add(relative_path))
   end
 end
