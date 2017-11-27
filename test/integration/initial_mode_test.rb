@@ -1,16 +1,8 @@
 require "test_helper"
 
-class InitialModeTest < Test::Unit::TestCase
-  setup do
-    @original_current_path = Pathname(Dir.pwd)
-    @working_path = Pathname(Dir.mktmpdir)
-    Dir.chdir(@working_path)
-  end
-
-  teardown do
-    Dir.chdir(@original_current_path)
-    @working_path.rmtree
-  end
+class InitialModeTest < IntegrationTestCase
+  setup(:prepare_working_path)
+  teardown(:destroy_working_path)
 
   test("run command, git init and commit in current directory") do
     new_file_path = Pathname("new_file.txt")
@@ -82,35 +74,5 @@ EOS
                  stdout)
 
     assert_equal([".git"], Dir.children("."))
-  end
-
-  private
-
-  class RunCommandError < StandardError
-  end
-
-  def assert_git_status(expected)
-    actual = []
-    @repository.status do |*args|
-      actual << args
-    end
-    assert_equal(expected, actual)
-  end
-
-  def init_repository
-    @repository = Rugged::Repository.init_at(".")
-  end
-
-  def run_command(*command)
-    if !system(*command)
-      raise RunCommandError, "failure: #{command.inspect}"
-    end
-  end
-
-  def prepare_committed_file(path: "exist_file.txt", content: "wrote.\n")
-    @exist_file_path = Pathname(path)
-    @exist_file_path.parent.mkpath
-    @exist_file_path.write(content)
-    @repository.git_commit(@repository.git_add(@exist_file_path))
   end
 end

@@ -1,17 +1,9 @@
 require "test_helper"
 
-class RegularModeTest < Test::Unit::TestCase
-  setup do
-    @original_current_path = Pathname(Dir.pwd)
-    @working_path = Pathname(Dir.mktmpdir)
-    Dir.chdir(@working_path)
-    init_repository
-  end
-
-  teardown do
-    Dir.chdir(@original_current_path)
-    @working_path.rmtree
-  end
+class RegularModeTest < IntegrationTestCase
+  setup(:prepare_working_path)
+  setup(:init_repository)
+  teardown(:destroy_working_path)
 
   test("commit new file after command run") do
     prepare_committed_file
@@ -137,27 +129,6 @@ STDOUT
   end
 
   private
-
-  class RunCommandError < StandardError
-  end
-
-  def assert_git_status(expected)
-    actual = []
-    @repository.status do |*args|
-      actual << args
-    end
-    assert_equal(expected, actual)
-  end
-
-  def init_repository
-    @repository = Rugged::Repository.init_at(".")
-  end
-
-  def run_command(*command)
-    if !system(*command)
-      raise RunCommandError, "failure: #{command.inspect}"
-    end
-  end
 
   def prepare_committed_file(path: "exist_file.txt", content: "wrote.\n")
     @exist_file_path = Pathname(path)

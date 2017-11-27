@@ -1,6 +1,6 @@
 require "test_helper"
 
-class EscapingTest < Test::Unit::TestCase
+class EscapingTest < UnitTestCase
   sub_test_case("escape_quote_argument") do
     test("foo") do
       command_path = (EXE_PATH / "git-cococo").expand_path
