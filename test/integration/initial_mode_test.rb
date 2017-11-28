@@ -41,7 +41,6 @@ class InitialModeTest < IntegrationTestCase
     assert_equal(<<STDOUT, stdout)
 Cannot use both "--autostash" option and "--init" option.
 STDOUT
-
     assert_equal([], Dir.children("."))
   end
 
@@ -72,7 +71,6 @@ EOS
     assert_match(Regexp.compile("\\A#{expected_stdout_pattern}\\Z",
                                 Regexp::MULTILINE),
                  stdout)
-
     assert_equal([".git"], Dir.children("."))
   end
 end

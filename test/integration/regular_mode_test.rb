@@ -88,6 +88,7 @@ EOS
       "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
     ]
     stdout, status = *Open3.capture2(*command)
+
     assert_equal(1, status.exitstatus)
     assert_equal(<<STDOUT, stdout)
 Detects following uncommitted changes:
@@ -104,7 +105,6 @@ Or, use "--autostash" option:
 
   $ git cococo --autostash sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 STDOUT
-
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
     assert_equal(1, @repository.head.log.length)
   end
