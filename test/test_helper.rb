@@ -1,5 +1,6 @@
 require "open3"
 require "pathname"
+require "shellwords"
 require "tmpdir"
 
 require "rugged"
