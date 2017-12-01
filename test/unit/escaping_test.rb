@@ -2,13 +2,11 @@ require "test_helper"
 
 class EscapingTest < UnitTestCase
   sub_test_case("escape_quote_argument") do
-    [
-      %w[foo foo],
-      %w[abc'def abc'\''def],
-    ].each do |argument, expected|
-      test(argument) do
-        assert_equal(expected, capture2_command(argument))
-      end
+    data(without_quote_charactor: %w[foo foo],
+         with_quote_charactor: %w[abc'def abc'\''def])
+    test("") do |data|
+      argument, expected = *data
+      assert_equal(expected, capture2_command(argument))
     end
   end
 
