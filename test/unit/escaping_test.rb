@@ -10,6 +10,20 @@ class EscapingTest < UnitTestCase
     end
   end
 
+  sub_test_case("escape_one_argument") do
+    data(no_special_charactors: %w[foo foo],
+         with_space_charactor: ["foo bar", "'foo bar'"],
+         with_dollar_charactor: %w[foo$bar 'foo$bar'],
+         with_double_quote_charactor: %w[foo"bar 'foo"bar'],
+         with_quote_charactor: %w[abc'def 'abc'\''def'],
+         with_quote_charactor_in_begin_of_argument: %w['foo ''\''foo'],
+         with_quote_charactor_in_end_of_argument: %w[foo' 'foo'\'''])
+    test("") do |data|
+      argument, expected = *data
+      assert_equal(expected, capture2_command(argument))
+    end
+  end
+
   private
 
   COMMAND_PATH = EXE_PATH / "git-cococo"
