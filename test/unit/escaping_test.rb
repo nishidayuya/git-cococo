@@ -24,6 +24,17 @@ class EscapingTest < UnitTestCase
     end
   end
 
+  sub_test_case("escape_command_line") do
+    data(one_argument: [%w[foo], "foo"],
+         two_arguments: [%w[foo bar], "foo bar"],
+         two_arguments_with_space_charactor: [["foo", "ba r"], "foo 'ba r'"],
+         two_arguments_with_quote_charactor: [["foo", "ba'r"], "foo 'ba'\\''r'"])
+    test("") do |data|
+      arguments, expected = *data
+      assert_equal(expected, capture2_command(*arguments))
+    end
+  end
+
   private
 
   COMMAND_PATH = EXE_PATH / "git-cococo"
