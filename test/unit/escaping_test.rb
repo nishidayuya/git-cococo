@@ -5,8 +5,8 @@ class EscapingTest < UnitTestCase
     data(without_quote_charactor: %w[foo foo],
          with_quote_charactor: %w[abc'def abc'\''def])
     test("") do |data|
-      argument, expected = *data
-      assert_equal(expected, capture2_command(argument))
+      arguments, expected = *data
+      assert_equal(expected, capture2_command(*arguments))
     end
   end
 
@@ -19,8 +19,8 @@ class EscapingTest < UnitTestCase
          with_quote_charactor_in_begin_of_argument: %w['foo ''\''foo'],
          with_quote_charactor_in_end_of_argument: %w[foo' 'foo'\'''])
     test("") do |data|
-      argument, expected = *data
-      assert_equal(expected, capture2_command(argument))
+      arguments, expected = *data
+      assert_equal(expected, capture2_command(*arguments))
     end
   end
 
