@@ -10,6 +10,8 @@ class EscapingTest < UnitTestCase
 
   sub_test_case("escape_quote_argument") do
     data(without_quote_charactor: %w[foo foo],
+         with_space_charactor: ["abc def", "abc def"],
+         with_linefeed_charactor: ["abc\ndef", "abc\ndef"],
          with_quote_charactor: %w[abc'def abc'\''def])
     test_escaping
   end
