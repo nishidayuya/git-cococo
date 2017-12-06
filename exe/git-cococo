@@ -142,23 +142,7 @@ pop_stash_if_autostashed() {
   git stash pop --quiet | sed -e '/^Already up to date!$/ d'
 }
 
-run_in_init_mode() {
-  die_if_init_target_is_existent_or_not_empty "$@"
-  "$@" # run command.
-  cd "$init"
-  run_git_init "$@"
-  commit_uncommitted_changes "$@"
-}
-
-run_in_git_work_directory() {
-  die_or_autostash_if_uncommitted_changes_are_exists "$@"
-  "$@" # run command.
-  commit_uncommitted_changes "$@"
-  pop_stash_if_autostashed "$@"
-}
-
-main() {
-  # parse git cococo options.
+parse_git_cococo_options() {
   autostash=
   init=
   while :
@@ -189,9 +173,31 @@ main() {
         break
         ;;
     esac
+    OPTIND=$((OPTIND + 1))
     shift
   done
+
   die_if_both_autostash_and_init
+}
+
+run_in_init_mode() {
+  die_if_init_target_is_existent_or_not_empty "$@"
+  "$@" # run command.
+  cd "$init"
+  run_git_init "$@"
+  commit_uncommitted_changes "$@"
+}
+
+run_in_git_work_directory() {
+  die_or_autostash_if_uncommitted_changes_are_exists "$@"
+  "$@" # run command.
+  commit_uncommitted_changes "$@"
+  pop_stash_if_autostashed "$@"
+}
+
+main() {
+  parse_git_cococo_options "$@"
+  shift $((OPTIND - 1))
 
   if test -n "$init"
   then
