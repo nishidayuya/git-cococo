@@ -37,12 +37,6 @@ class EscapingTest < UnitTestCase
 
   private
 
-  COMMAND_PATH = EXE_PATH / "git-cococo"
-
-  def test_method_name
-    return self.class.name[/(?<=::).*\z/]
-  end
-
   def capture2_command(*arguments)
     stdout, stderr, status = *Open3.capture3("sh", stdin_data: <<STDIN)
 . #{COMMAND_PATH}

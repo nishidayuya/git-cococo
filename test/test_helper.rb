@@ -43,6 +43,13 @@ class GitCococoTestCase < Test::Unit::TestCase
 end
 
 class UnitTestCase < GitCococoTestCase
+  private
+
+  COMMAND_PATH = EXE_PATH / "git-cococo"
+
+  def test_method_name
+    return self.class.name[/(?<=::).*\z/]
+  end
 end
 
 class IntegrationTestCase < GitCococoTestCase
