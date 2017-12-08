@@ -26,6 +26,11 @@ init: .
 EOS
     end
 
+    test("both --init and --autostash to die") do
+      _, _, status = *capture3_sh("--init", "--autostash", "command1")
+      assert_equal(1, status.exitstatus)
+    end
+
     test("--init=git-init-path") do
       assert_equal(<<EOS, capture2_command("--init=path/to/init", "command1"))
 OPTIND: 2
@@ -43,14 +48,18 @@ EOS
 
   private
 
-  def capture2_command(*arguments)
-    stdout, stderr, status = *Open3.capture3("sh", stdin_data: <<STDIN)
+  def capture3_sh(*arguments)
+    return *Open3.capture3("sh", stdin_data: <<STDIN)
 . #{COMMAND_PATH}
 #{test_method_name} #{Shellwords.join(arguments)}
 echo OPTIND: $OPTIND
 echo autostash: $autostash
 echo init: $init
 STDIN
+  end
+
+  def capture2_command(*arguments)
+    stdout, stderr, status = *capture3_sh(*arguments)
     assert_equal("", stderr)
     assert_equal(0, status.exitstatus)
     return stdout
