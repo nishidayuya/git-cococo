@@ -44,6 +44,14 @@ EOS
     test("--help") do |option|
       assert_match(/\AUsage: /, capture2_command(option, "command1"))
     end
+
+    test("--") do
+      assert_equal(<<EOS, capture2_command("--", "--/command1"))
+OPTIND: 2
+autostash:
+init:
+EOS
+    end
   end
 
   private

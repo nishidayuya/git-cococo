@@ -162,6 +162,7 @@ parse_git_cococo_options() {
         exit
         ;;
       --)
+        OPTIND=$((OPTIND + 1))
         shift
         break
         ;;
