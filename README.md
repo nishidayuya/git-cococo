@@ -60,6 +60,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/nishid
 ## Development
 
 * [Ruby](https://www.ruby-lang.org/): To run `rake` command and tests.
+* [CMake](https://cmake.org/download/): To build rugged.gem for tests.
 * [Shellcheck](https://github.com/koalaman/shellcheck#installing): To run lint.
 
 Clone this project.
