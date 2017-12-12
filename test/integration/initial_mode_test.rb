@@ -54,14 +54,14 @@ STDOUT
 "\\." directory should be nonexistent or empty\\.
 git cococo found following files:
 
-  .*?
-  d.*? \\.
-  d.*? \\.\\.
-  d.*? \\.git
+    .*?
+    d.*? \\.
+    d.*? \\.\\.
+    d.*? \\.git
 
 Run without "--init" option:
 
-  \\$ git cococo append_file #{Regexp.escape(new_file_path.basename.to_s)} wrote\\.
+    \\$ git cococo append_file #{Regexp.escape(new_file_path.basename.to_s)} wrote\\.
 EOS
     # find invalid line.
     expected_stdout_pattern.each_line(chomp: true).with_index do |l, i|

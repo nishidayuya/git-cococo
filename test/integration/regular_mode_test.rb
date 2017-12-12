@@ -93,17 +93,17 @@ EOS
     assert_equal(<<STDOUT, stdout)
 Detects following uncommitted changes:
 
-  ?? uncommitted_file.txt
+    ?? uncommitted_file.txt
 
 Run "git stash" and retry "git cococo":
 
-  $ git stash --include-untracked &&
-    git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\''' &&
-    git stash pop
+    $ git stash --include-untracked &&
+      git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\''' &&
+      git stash pop
 
 Or, use "--autostash" option:
 
-  $ git cococo --autostash sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
+    $ git cococo --autostash sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 STDOUT
     assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
     assert_equal(1, @repository.head.log.length)

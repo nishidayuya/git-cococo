@@ -79,12 +79,12 @@ git cococo found following files:
 
 $(
   # shellcheck disable=SC2012
-  ls -al "$init" | sed -e 's|^|  |g'
+  ls -al "$init" | sed -e 's|^|    |g'
 )
 
 Run without "--init" option:
 
-  $ git cococo $(escape_command_line "$@")
+    $ git cococo $(escape_command_line "$@")
 EOF
   exit 1
 }
@@ -104,17 +104,17 @@ die_or_autostash_if_uncommitted_changes_are_exists() {
     cat <<EOF
 Detects following uncommitted changes:
 
-$(git status --short | sed -e 's|^|  |g')
+$(git status --short | sed -e 's|^|    |g')
 
 Run "git stash" and retry "git cococo":
 
-  $ git stash --include-untracked &&
-    git cococo $(escape_command_line "$@") &&
-    git stash pop
+    $ git stash --include-untracked &&
+      git cococo $(escape_command_line "$@") &&
+      git stash pop
 
 Or, use "--autostash" option:
 
-  $ git cococo --autostash $(escape_command_line "$@")
+    $ git cococo --autostash $(escape_command_line "$@")
 EOF
     exit 1
   fi
