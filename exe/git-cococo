@@ -25,7 +25,9 @@ escape_quote_argument() {
 
 escape_one_argument() {
   need_quote=
-  expr "$1" : '.*[ \$\"'\'']' > /dev/null && need_quote=1
+  # This regexp includes a linefeed("\n").
+  expr "$1" : '.*[ \$\"'\''
+]' > /dev/null && need_quote=1
 
   test -z "$need_quote" || echo_n "'"
   escape_quote_argument "$1"

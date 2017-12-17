@@ -19,6 +19,7 @@ class EscapingTest < UnitTestCase
   sub_test_case("escape_one_argument") do
     data(no_special_charactors: %w[foo foo],
          with_space_charactor: ["foo bar", "'foo bar'"],
+         with_linefeed_charactor: ["abc\ndef", "'abc\ndef'"],
          with_dollar_charactor: %w[foo$bar 'foo$bar'],
          with_double_quote_charactor: %w[foo"bar 'foo"bar'],
          with_quote_charactor: %w[abc'def 'abc'\''def'],
