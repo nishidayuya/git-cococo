@@ -25,9 +25,12 @@ escape_quote_argument() {
 
 escape_one_argument() {
   need_quote=
-  # This regexp includes a linefeed("\n").
-  expr "$1" : '.*[ \$\"'\''
-]' > /dev/null && need_quote=1
+  # This regexp is written with reference to Ruby's Shellwords.escape.
+  # https://github.com/ruby/ruby/blob/v2_4_2/lib/shellwords.rb#L150
+  #
+  # Difference between original regexp and this regexp is that
+  # linefeed("\n") is not included.
+  expr "$1" : '.*[^A-Za-z0-9_.,:/@-]' > /dev/null && need_quote=1
 
   test -z "$need_quote" || echo_n "'"
   escape_quote_argument "$1"
