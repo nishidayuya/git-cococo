@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Original version is in https://github.com/nishidayuya/git-cococo
+
 set -eu
 
 USAGE='Usage: git cococo [options] [--] <command> [args...]
