@@ -42,6 +42,10 @@ uncommitted_changes_are_exists() {
   test -n "$(git status --short)"
 }
 
+in_init_mode_p() {
+  test -n "$init"
+}
+
 escape_quote_argument() {
   # In MacOSX, sed adds "\n" to tail of stream.
   # echo_n rejects tail "\n".
@@ -87,7 +91,8 @@ EOF
 }
 
 die_if_both_autostash_and_init() {
-  test -n "$autostash" -a -n "$init" || return 0
+  in_init_mode_p || return 0
+  test -n "$autostash" || return 0
 
   echo 'Cannot use both "--autostash" option and "--init" option.'
   exit 1
@@ -230,7 +235,7 @@ main() {
   parse_git_cococo_options "$@"
   shift $((OPTIND - 1))
 
-  if test -n "$init"
+  if in_init_mode_p
   then
     run_in_init_mode "$@"
   else
