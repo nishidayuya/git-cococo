@@ -38,7 +38,7 @@ echo_n() {
   printf -- '%s' "$1"
 }
 
-uncommitted_changes_are_exists() {
+uncommitted_changes_are_exists_p() {
   test -n "$(git status --short)"
 }
 
@@ -134,9 +134,9 @@ run_git_init() {
   git init --quiet
 }
 
-die_or_autostash_if_uncommitted_changes_are_exists() {
+die_or_autostash_if_uncommitted_changes_are_exists_p() {
   stashed=
-  uncommitted_changes_are_exists || return 0
+  uncommitted_changes_are_exists_p || return 0
 
   if ! with_autostash_option_p
   then
@@ -163,7 +163,7 @@ EOF
 }
 
 commit_uncommitted_changes() {
-  if uncommitted_changes_are_exists
+  if uncommitted_changes_are_exists_p
   then
     git add --all
     create_commit_message "$@" | git commit --quiet --file=-
@@ -229,7 +229,7 @@ run_in_init_mode() {
 }
 
 run_in_git_work_directory() {
-  die_or_autostash_if_uncommitted_changes_are_exists "$@"
+  die_or_autostash_if_uncommitted_changes_are_exists_p "$@"
   "$@" # run command.
   commit_uncommitted_changes "$@"
   pop_stash_if_autostashed "$@"
