@@ -12,6 +12,7 @@ class EscapingTest < UnitTestCase
     data(without_quote_charactor: %w[foo foo],
          with_space_charactor: ["abc def", "abc def"],
          with_linefeed_charactor: ["abc\ndef", "abc\ndef"],
+         with_backslash_charactor: %w[abc\1def abc\1def],
          with_quote_charactor: %w[abc'def abc'\''def])
     test_escaping
   end
