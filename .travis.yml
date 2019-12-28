@@ -22,6 +22,7 @@ addons:
 
 before_install:
   - if test osx = "$TRAVIS_OS_NAME"; then brew install shellcheck; fi
+  - git version
   - git config --global user.name git-cococo
   - git config --global user.email git-cococo@example.org
   - gem update --system
