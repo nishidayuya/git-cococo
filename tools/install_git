@@ -1,0 +1,32 @@
+#!/bin/sh
+
+set -e
+
+usage="Usage: $(basename $0) version-to-install"
+
+target_root_path=$HOME/git-versions
+
+version=$1
+if test "$version" = ""
+then
+  echo "$usage"
+  exit 0
+fi
+
+target=$target_root_path/$version
+
+if test -x $target/bin/git
+then
+  echo "already installed"
+  exit 0
+fi
+
+cd $(mktemp -d)
+wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-$version.tar.xz
+tar xf git-$version.tar.xz
+cd git-$version
+mkdir -p $target
+./configure --prefix=$target
+make -j$(nproc)
+make install
+echo "git-$version installation is succeeded"
