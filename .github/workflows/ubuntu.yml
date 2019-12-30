@@ -1,0 +1,56 @@
+name: ubuntu
+
+on:
+  - push
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        git:
+          - 2.20.1 # Debian 10 https://packages.debian.org/buster/git
+          - 2.18.1 # CentOS 8 http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/
+          - 2.17.1 # Ubuntu 18.04 https://packages.ubuntu.com/bionic/git
+          - 2.11.0 # Debian 9 https://packages.debian.org/stretch/git
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: actions/setup-ruby@v1
+        with:
+          ruby-version: 2.6.x
+      - name: Setup git
+        run: |
+          set -eux
+          GIT=$HOME/git/target/git-${{ matrix.git }}
+          sudo apt install -y gettext
+          mkdir -p ~/git/builds/
+          cd ~/git/builds/
+          wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-${{ matrix.git }}.tar.gz
+          tar xf git-${{ matrix.git }}.tar.gz
+          cd git-${{ matrix.git }}/
+          ./configure --prefix=$GIT
+          make -j$(nproc)
+          make install
+          export PATH=$GIT/bin:$PATH
+          which git
+          git version
+          git config --global user.name git-cococo
+          git config --global user.email git-cococo@example.org
+      - name: Install dependencies
+        run: |
+          set -eux
+          sudo apt install -y cmake shellcheck
+          gem update --system
+          gem --version
+          gem install --no-document \
+            bundler \
+            -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
+          bundle --version
+          bundle install --jobs $(nproc) --retry 3
+      - name: Run rake
+        run: |
+          set -eux
+          GIT=$HOME/git/target/git-${{ matrix.git }}
+          export PATH=$GIT/bin:$PATH
+          bundle exec rake
