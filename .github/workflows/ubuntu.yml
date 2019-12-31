@@ -22,17 +22,9 @@ jobs:
       - name: Setup git
         run: |
           set -eux
-          GIT=$HOME/git/target/git-${{ matrix.git }}
           sudo apt install -y gettext
-          mkdir -p ~/git/builds/
-          cd ~/git/builds/
-          wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-${{ matrix.git }}.tar.gz
-          tar xf git-${{ matrix.git }}.tar.gz
-          cd git-${{ matrix.git }}/
-          ./configure --prefix=$GIT
-          make -j$(nproc)
-          make install
-          export PATH=$GIT/bin:$PATH
+          ./tools/install_git ${{ matrix.git }}
+          export PATH=$HOME/git-versions/${{ matrix.git }}/bin:$PATH
           which git
           git version
           git config --global user.name git-cococo
@@ -51,6 +43,5 @@ jobs:
       - name: Run rake
         run: |
           set -eux
-          GIT=$HOME/git/target/git-${{ matrix.git }}
-          export PATH=$GIT/bin:$PATH
+          export PATH=$HOME/git-versions/${{ matrix.git }}/bin:$PATH
           bundle exec rake
