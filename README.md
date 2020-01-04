@@ -1,6 +1,7 @@
 # `git cococo`: git COmmit COmpletely COmmand output
 
 [![License X11](https://img.shields.io/badge/license-X11-blue.svg)](https://raw.githubusercontent.com/nishidayuya/git-cococo/master/LICENSE.txt)
+[![Latest tag](https://img.shields.io/github/v/tag/nishidayuya/git-cococo)](https://github.com/nishidayuya/git-cococo/tags)
 [![Build Status](https://github.com/nishidayuya/git-cococo/workflows/ubuntu/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Aubuntu)
 [![Build Status](https://github.com/nishidayuya/git-cococo/workflows/windows/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Awindows)
 [![Build Status](https://github.com/nishidayuya/git-cococo/workflows/macos/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Amacos)
