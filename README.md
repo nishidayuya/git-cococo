@@ -52,7 +52,9 @@ Examples for Noders:
 
 ```sh
 $ git cococo --init npm init --yes
-$ git cococo npm install --save xmlhttprequest
+$ git cococo sh -c 'echo /node_modules | tee -a .gitignore'
+$ git cococo npm install --save express
+$ git cococo npm install --save-dev mocha
 ```
 
 ## Contributing
