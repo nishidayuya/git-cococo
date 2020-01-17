@@ -1,21 +1,18 @@
-#!/bin/sh
+#!/usr/bin/env ruby
 
-set -e
+USAGE = "#{Process.argv0} output_path text1 ..."
 
-output=$1
-shift
+require "pathname"
 
-if test x = "x$TEST_VERBOSE_OUTPUT"
-then
-  verbose_echo() {
-    :
-  }
-else
-  verbose_echo() {
-    echo "$*"
-  }
-fi
+output_path = ARGV.shift
+if !output_path
+  STDERR.puts(USAGE)
+  exit(1)
+end
 
-verbose_echo writing to $output.
-echo "$@" >> $output
-verbose_echo wrote to $output.
+output_path = Pathname(output_path)
+puts("writing to #{output_path}") if ENV["TEST_VERBOSE_OUTPUT"]
+output_path.open("a") do |f|
+  f.puts(ARGV.join(" "))
+end
+puts("wrote to #{output_path}") if ENV["TEST_VERBOSE_OUTPUT"]
