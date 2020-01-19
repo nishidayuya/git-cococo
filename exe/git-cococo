@@ -53,7 +53,7 @@ with_autostash_option_p() {
 escape_quote_argument() {
   # In MacOSX, sed adds "\n" to tail of stream.
   # echo_n rejects tail "\n".
-  echo_n "$(echo "$1" | sed -e s/\'/\'\\\\\'\'/g)"
+  echo_n "$(echo_n "$1" | sed -e s/\'/\'\\\\\'\'/g)"
 }
 
 escape_one_argument() {

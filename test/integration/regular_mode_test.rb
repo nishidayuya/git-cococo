@@ -75,6 +75,29 @@ EOS
     assert_equal("wrote.\n", @exist_file_path.read)
   end
 
+  test("commit with backslash in command argument") do
+    prepare_committed_file
+    assert_equal(1, @repository.head.log.length)
+    assert_git_status([])
+
+    command = %W"git cococo append_file #{@exist_file_path} \\a\\b\a\b\\n"
+    run_command(*command)
+    assert_equal(<<EOS, @exist_file_path.read)
+wrote.
+\\a\\b\a\b\\n
+EOS
+
+    assert_git_status([])
+    assert_equal(<<EOS, @repository.head.target.message)
+run: git cococo append_file #{@exist_file_path} '\\a\\b\a\b\\n'
+EOS
+    assert_equal(2, @repository.head.log.length)
+    assert_equal(<<EOS, @exist_file_path.read)
+wrote.
+\\a\\b\a\b\\n
+EOS
+  end
+
   test("do nothing and exit 1 if uncommitted changes are exists") do
     prepare_committed_file
 

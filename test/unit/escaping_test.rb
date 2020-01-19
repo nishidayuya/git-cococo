@@ -12,6 +12,7 @@ class EscapingTest < UnitTestCase
     data(without_quote_charactor: %w[foo foo],
          with_space_charactor: ["abc def", "abc def"],
          with_linefeed_charactor: ["abc\ndef", "abc\ndef"],
+         with_backslash_charactor: %w[abc\1def abc\1def],
          with_quote_charactor: %w[abc'def abc'\''def])
     test_escaping
   end
@@ -20,6 +21,7 @@ class EscapingTest < UnitTestCase
     data(no_special_charactors: %w[foo foo],
          with_space_charactor: ["foo bar", "'foo bar'"],
          with_linefeed_charactor: ["abc\ndef", "'abc\ndef'"],
+         with_backslash_charactor: %w[abc\1def 'abc\1def'],
          with_dollar_charactor: %w[foo$bar 'foo$bar'],
          with_double_quote_charactor: %w[foo"bar 'foo"bar'],
          with_quote_charactor: %w[abc'def 'abc'\''def'],
@@ -30,6 +32,7 @@ class EscapingTest < UnitTestCase
 
   sub_test_case("escape_command_line") do
     data(one_argument: [%w[foo], "foo"],
+         with_backslash_charactor: [%w[abc\1def], %q"'abc\1def'"],
          two_arguments: [%w[foo bar], "foo bar"],
          two_arguments_with_space_charactor: [["foo", "ba r"], "foo 'ba r'"],
          two_arguments_with_quote_charactor: [["foo", "ba'r"], "foo 'ba'\\''r'"])
