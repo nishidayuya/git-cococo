@@ -38,12 +38,14 @@ Examples for Rubyists:
 
 ```sh
 $ git cococo --init bundle init
+$ git cococo rbenv local 2.7.0
 $ git cococo bundle add rake
 $ git cococo bundle update nokogiri
 
 $ n=new_awesome_gem && git cococo --init=$n bundle gem $n
 
 $ n=blog && git cococo --init=$n rails new $n
+$ cd $n
 $ git cococo bin/rails generate scaffold post title body:text published_at:datetime
 $ git cococo bin/rails db:migrate
 ```
