@@ -28,6 +28,26 @@ Run `sed` command and commit its changes with commit message "run: git cococo se
 $ git cococo sed -i -e s/foo/bar/g a.txt
 ```
 
+Oops! I forgot un-commmitted changes. `git cococo` tells me it and don't run command.
+
+```sh
+$ git cococo sed -i -e s/foo/bar/g a.txt
+Detects following uncommitted changes:
+
+     M b.txt
+    ?? c.txt
+
+Run "git stash" and retry "git cococo":
+
+    $ git stash --include-untracked &&
+      git cococo sed -i -e s/foo/bar/g a.txt &&
+      git stash pop
+
+Or, use "--autostash" option:
+
+    $ git cococo --autostash sed -i -e s/foo/bar/g a.txt
+```
+
 Replace `writed` to `wrote` all of git tracked files and commit with re-runnable commit message.
 
 ```sh
