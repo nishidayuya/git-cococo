@@ -28,6 +28,8 @@ Run `sed` command and commit its changes with commit message "run: git cococo se
 $ git cococo sed -i -e s/foo/bar/g a.txt
 ```
 
+---
+
 Oops! I forgot un-commmitted changes. `git cococo` tells me it and don't run command.
 
 ```sh
