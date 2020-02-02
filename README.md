@@ -22,7 +22,7 @@ $ mv git-cococo move-to-PATH-env-directory/
 
 ## Usage
 
-Run `sed` command and commit its changes with commit message "run: git cococo sed -i -e s/foo/bar/g a.txt".
+Run `sed` command and commit changes with re-runnable commit message "run: git cococo sed -i -e s/foo/bar/g a.txt".
 
 ```sh
 $ git cococo sed -i -e s/foo/bar/g a.txt
@@ -50,7 +50,7 @@ Or, use "--autostash" option:
     $ git cococo --autostash sed -i -e s/foo/bar/g a.txt
 ```
 
-Replace `writed` to `wrote` all of git tracked files and commit with re-runnable commit message.
+Replace `writed` to `wrote` all of git tracked files and commit.
 
 ```sh
 $ git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e s/writed/wrote/g'
