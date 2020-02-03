@@ -83,6 +83,22 @@ $ git cococo npm install --save express
 $ git cococo npm install --save-dev mocha
 ```
 
+### for Pythonistas
+
+```sh
+$ git cococo --init pyenv local 3.8.1
+$ git cococo touch requirements.txt
+$ git cococo sh -c 'echo /venv | tee -a .gitignore'
+$ python -m venv venv
+$ git cococo sh -ex -c '
+    . venv/bin/activate
+    pip install -r requirements.txt
+    pip install --upgrade pip
+    pip install tensorflow
+    pip freeze | tee requirements.txt
+  '
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/nishidayuya/git-cococo .
