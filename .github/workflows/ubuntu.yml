@@ -37,8 +37,6 @@ jobs:
           sudo apt install -y gettext
           ./tools/install_git ${{ matrix.git }}
           export PATH=$HOME/git-versions/${{ matrix.git }}/bin:$PATH
-          which git
-          git version
           git config --global user.name git-cococo
           git config --global user.email git-cococo@example.org
       - name: Install dependencies
@@ -46,13 +44,21 @@ jobs:
           set -eux
           sudo apt install -y cmake shellcheck
           gem update --system
-          gem --version
           gem install --no-document \
             bundler \
             -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
-          bundle --version
           bundle config path vendor/bundle
           bundle install --jobs $(nproc) --retry 3
+      - name: Output versions
+        run: |
+          set -eux
+          which git
+          git version
+          ruby --version
+          gem --version
+          bundle --version
+          cmake --version
+          shellcheck --version
       - name: Run rake
         run: |
           set -eux
