@@ -1,0 +1,33 @@
+#!/bin/sh
+
+set -e
+
+usage="Usage: $(basename $0) version-to-switch"
+
+target_root_path=$HOME/git-versions
+
+version=$1
+if test "$version" = ""
+then
+  cat <<EOF
+$usage
+
+Available versions:
+EOF
+  ls $target_root_path/*/bin/git |
+    sed -e "s|^$target_root_path/|- |" \
+        -e 's|/bin/git$||'
+  exit 0
+fi
+
+target=$target_root_path/$version
+
+if ! test -x $target/bin/git
+then
+  echo "not installed" 1>&2
+  exit 1
+fi
+
+export PATH=$target/bin:$PATH
+git version
+exec $SHELL -l

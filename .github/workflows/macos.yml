@@ -1,0 +1,31 @@
+name: macos
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up git
+        run: |
+          set -eux
+          which git
+          git version
+          git config --global user.name git-cococo
+          git config --global user.email git-cococo@example.org
+      - name: Install dependencies
+        run: |
+          set -eux
+          brew install pkg-config
+          gem --version
+          gem install --no-document \
+            bundler \
+            -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
+          bundle --version
+          bundle install --retry 3
+      - name: Run test
+        run: |
+          set -eux
+          bundle exec rake test

@@ -1,8 +1,9 @@
 # `git cococo`: git COmmit COmpletely COmmand output
 
 [![License X11](https://img.shields.io/badge/license-X11-blue.svg)](https://raw.githubusercontent.com/nishidayuya/git-cococo/master/LICENSE.txt)
-[![Build Status](https://img.shields.io/travis/nishidayuya/git-cococo/master.svg)](https://travis-ci.org/nishidayuya/git-cococo)
-[![Build Status](https://img.shields.io/appveyor/ci/nishidayuya/git-cococo/master.svg)](https://ci.appveyor.com/project/nishidayuya/git-cococo)
+[![Build Status](https://github.com/nishidayuya/git-cococo/workflows/ubuntu/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Aubuntu)
+[![Build Status](https://github.com/nishidayuya/git-cococo/workflows/windows/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Awindows)
+[![Build Status](https://github.com/nishidayuya/git-cococo/workflows/macos/badge.svg)](https://github.com/nishidayuya/git-cococo/actions?query=workflow%3Amacos)
 
 ## Requirements
 
