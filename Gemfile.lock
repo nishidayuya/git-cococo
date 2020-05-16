@@ -12,7 +12,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     rake (13.0.1)
-    rugged (0.27.7)
+    rugged (1.0.0)
     test-unit (3.3.5)
       power_assert
 
