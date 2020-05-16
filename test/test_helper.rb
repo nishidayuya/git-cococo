@@ -72,7 +72,7 @@ class IntegrationTestCase < GitCococoTestCase
 
   def assert_git_status(expected)
     actual = []
-    @repository.status do |*args|
+    @repository.status do |args|
       actual << args
     end
     assert_equal(expected, actual)
