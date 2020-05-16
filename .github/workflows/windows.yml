@@ -15,6 +15,10 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-rubygems-
+      - name: Install MSYS2
+        uses: numworks/setup-msys2@v1
+        with:
+          update: true
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
@@ -28,6 +32,7 @@ jobs:
           git config --global core.autocrlf false
       - name: Install dependencies
         run: |
+          msys2do pacman -S --noconfirm mingw-w64-x86_64-pcre
           gem update --system
           gem --version
           gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
