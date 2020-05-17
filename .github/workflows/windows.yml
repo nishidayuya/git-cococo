@@ -38,6 +38,10 @@ jobs:
           gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
           bundle --version
           bundle config --local path vendor/bundle
-          bundle install --jobs $(nproc) --retry 3
+          msys2do bundle install --jobs $(nproc) --retry 3
+#      - name: TODO
+#        if: ${{ failure() }}
+#        run: |
+#          type 
       - name: Run test
         run: bundle exec rake test
