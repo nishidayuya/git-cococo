@@ -17,8 +17,8 @@ jobs:
             ${{ runner.os }}-rubygems-
       - name: Install MSYS2
         uses: numworks/setup-msys2@v1
-        with:
-          update: true
+        #with:
+        #  update: true
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
