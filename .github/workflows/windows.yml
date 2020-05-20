@@ -32,12 +32,13 @@ jobs:
           git config --global core.autocrlf false
       - name: Install dependencies
         run: |
-          msys2do pacman -S --noconfirm msys2-w32api-runtime mingw-w64-x86_64-pcre
+          msys2do pacman -S --noconfirm git make mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-zlib mingw-w64-x86_64-openssl mingw-w64-x86_64-libssh2 mingw-w64-x86_64-libgit2
           gem update --system
           gem --version
           gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
           bundle --version
           bundle config --local path vendor/bundle
+          bundle config build.rugged --use-system-libraries
           bundle install --jobs $(nproc) --retry 3
 #      - name: TODO
 #        if: ${{ failure() }}
