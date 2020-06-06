@@ -32,13 +32,11 @@ jobs:
           bundle install --jobs $(nproc) --retry 3
       - name: Output versions
         run: |
-          set -eux
           git version
           sh --version
           ruby --version
           gem --version
           bundle --version
           cmake --version
-          shellcheck --version
       - name: Run test
         run: bundle exec rake test
