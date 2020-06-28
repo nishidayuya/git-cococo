@@ -49,7 +49,7 @@ jobs:
           echo 031
           gem install rugged -- --use-system-libraries
           echo 032
-          dir \hostedtoolcache\windows\Ruby\2.6.6\x64\lib\ruby\gems\2.6.0\gems\rugged-1.0.1\lib\rugged
+          dir C:\hostedtoolcache\windows\Ruby\2.6.6\x64\lib\ruby\gems\2.6.0\gems\rugged-1.0.1\lib\rugged
           echo 036
           ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 040
