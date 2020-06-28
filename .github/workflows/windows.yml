@@ -35,9 +35,9 @@ jobs:
       - name: Install dependencies
         run: |
           echo 010
-          ridk exec pacman --sync --refresh --sysupgrade --noconfirm
+          pacman --sync --refresh --sysupgrade --noconfirm
           echo 020
-          ridk exec pacman --sync --noconfirm `
+          pacman --sync --noconfirm `
             mingw-w64-x86_64-gcc `
             mingw-w64-x86_64-zlib `
             mingw-w64-x86_64-openssl `
