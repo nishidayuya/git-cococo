@@ -47,15 +47,14 @@ jobs:
           echo 030
           gem --version
           echo 040
-          gem install rugged -- --use-system-libraries
           echo 050
           gem install bundler
           echo 060
           bundle --version
           echo 070
           bundle config --local path vendor/bundle
+          echo 080
           echo 090
-          bundle config build.rugged
           echo 100
           bundle install --jobs $(nproc) --retry 3
           echo 110
@@ -78,5 +77,5 @@ jobs:
 #          RUBYOPT: -rdevkit
         run: |
           echo 120
-          bundle exec ruby -rdevkit -S rake test
+          bundle exec ruby -rdevkit -S rake test --verbose
           echo 130
