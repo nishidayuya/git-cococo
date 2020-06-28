@@ -52,7 +52,7 @@ jobs:
           echo 030
           ridk exec gem --version
           echo 031
-          ridk exec gem install rugged -- --use-system-libraries
+          ridk exec -- gem install rugged -- --use-system-libraries
           echo 032
           dir C:\hostedtoolcache\windows\Ruby\2.6.6\x64\lib\ruby\gems\2.6.0\gems\rugged-1.0.1\lib\rugged
           echo 036
