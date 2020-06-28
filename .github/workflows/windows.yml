@@ -74,6 +74,8 @@ jobs:
 #        run: |
 #          type 
       - name: Run test
+        env:
+          RUBYOPT: -rdevkit
         run: |
           echo 120
           bundle exec rake test
