@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+#    env:
+#      RUBYOPT: -rdevkit
     steps:
       - uses: actions/checkout@v2
       - name: Cache rubygems
@@ -15,10 +17,10 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-rubygems-
-      - name: Install MSYS2
-        uses: numworks/setup-msys2@v1
-        #with:
-        #  update: true
+#      - name: Install MSYS2
+#        uses: numworks/setup-msys2@v1
+#        #with:
+#        #  update: true
       - name: Set up Ruby
         uses: actions/setup-ruby@v1
         with:
@@ -32,18 +34,49 @@ jobs:
           git config --global core.autocrlf false
       - name: Install dependencies
         run: |
-          msys2do pacman -S --noconfirm git make mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-zlib mingw-w64-x86_64-openssl mingw-w64-x86_64-libssh2 mingw-w64-x86_64-libgit2
-          msys2do gem install rugged -- --use-system-libraries
-          gem update --system
+          echo 010
+          ridk exec pacman --sync --refresh --sysupgrade --noconfirm
+          echo 020
+          ridk exec pacman --sync --noconfirm `
+            mingw-w64-x86_64-gcc `
+            mingw-w64-x86_64-zlib `
+            mingw-w64-x86_64-openssl `
+            mingw-w64-x86_64-libssh2 `
+            mingw-w64-x86_64-libgit2 `
+            mingw-w64-x86_64-cmake
+          echo 030
           gem --version
-          gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
+          echo 040
+          gem install rugged -- --use-system-libraries
+          echo 050
+          gem install bundler
+          echo 060
           bundle --version
+          echo 070
+          bundle lock --add-platform ruby
+          echo 080
           bundle config --local path vendor/bundle
+          echo 090
           bundle config build.rugged --use-system-libraries
+          echo 100
           bundle install --jobs $(nproc) --retry 3
+          echo 110
+#        run: |
+#          msys2do pacman -S --noconfirm git make mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-zlib mingw-w64-x86_64-openssl mingw-w64-x86_64-libssh2 mingw-w64-x86_64-libgit2
+#          msys2do gem install rugged -- --use-system-libraries
+#          gem update --system
+#          gem --version
+#          gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
+#          bundle --version
+#          bundle config --local path vendor/bundle
+#          bundle config build.rugged --use-system-libraries
+#          bundle install --jobs $(nproc) --retry 3
 #      - name: TODO
 #        if: ${{ failure() }}
 #        run: |
 #          type 
       - name: Run test
-        run: bundle exec rake test
+        run: |
+          echo 120
+          bundle exec rake test
+          echo 130
