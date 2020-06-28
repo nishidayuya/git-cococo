@@ -46,6 +46,10 @@ jobs:
             mingw-w64-x86_64-cmake
           echo 030
           gem --version
+          echo 031
+          gem install rugged -- --use-system-libraries
+          echo 032
+          ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 040
           echo 050
           gem install bundler
