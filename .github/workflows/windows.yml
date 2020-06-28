@@ -49,6 +49,8 @@ jobs:
           echo 031
           gem install rugged -- --use-system-libraries
           echo 032
+          dir \\hostedtoolcache\\windows\\Ruby\\2.6.6\\x64\\lib\\ruby\\gems\\2.6.0\\gems\\rugged-1.0.1\\lib/rugged
+          echo 036
           ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 040
           echo 050
@@ -64,6 +66,7 @@ jobs:
           echo 110
           bundle exec ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 115
+#          gem install rugged -- --use-system-libraries
 #        run: |
 #          msys2do pacman -S --noconfirm git make mingw-w64-x86_64-gcc mingw-w64-x86_64-cmake mingw-w64-x86_64-zlib mingw-w64-x86_64-openssl mingw-w64-x86_64-libssh2 mingw-w64-x86_64-libgit2
 #          msys2do gem install rugged -- --use-system-libraries
