@@ -77,5 +77,5 @@ jobs:
 #          RUBYOPT: -rdevkit
         run: |
           echo 120
-          bundle exec ruby -rdevkit -S rake test --verbose
+          env -- TESTOPTS="--verbose" bundle exec ruby -rdevkit -S rake test
           echo 130
