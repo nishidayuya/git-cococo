@@ -35,7 +35,7 @@ jobs:
       - name: Install dependencies
         run: |
           echo 000
-          ridk install 2
+          ridk install 2 3
           echo 010
           ridk exec pacman --sync --refresh --sysupgrade --noconfirm
           echo 020
