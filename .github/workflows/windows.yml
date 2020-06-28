@@ -55,7 +55,7 @@ jobs:
           echo 070
           bundle config --local path vendor/bundle
           echo 090
-          bundle config build.rugged --use-system-libraries
+          bundle config build.rugged
           echo 100
           bundle install --jobs $(nproc) --retry 3
           echo 110
