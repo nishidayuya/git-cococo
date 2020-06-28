@@ -53,8 +53,6 @@ jobs:
           echo 060
           bundle --version
           echo 070
-          bundle lock --add-platform ruby
-          echo 080
           bundle config --local path vendor/bundle
           echo 090
           bundle config build.rugged --use-system-libraries
