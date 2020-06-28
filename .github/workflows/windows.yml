@@ -50,13 +50,14 @@ jobs:
           echo 025
           ridk enable
           echo 030
-          gem --version
+          ridk exec gem --version
           echo 031
-          gem install rugged -- --use-system-libraries
+          ridk exec gem install rugged -- --use-system-libraries
           echo 032
           dir C:\hostedtoolcache\windows\Ruby\2.6.6\x64\lib\ruby\gems\2.6.0\gems\rugged-1.0.1\lib\rugged
           echo 036
           ruby -rdevkit -rrugged -e 'p Rugged::Version'
+          ridk exec ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 040
           echo 050
           gem install bundler
