@@ -34,6 +34,8 @@ jobs:
           git config --global core.autocrlf false
       - name: Install dependencies
         run: |
+          echo 000
+          ridk install 2
           echo 010
           ridk exec pacman --sync --refresh --sysupgrade --noconfirm
           echo 020
@@ -45,6 +47,8 @@ jobs:
             mingw-w64-x86_64-libgit2 `
             mingw-w64-x86_64-gmp `
             mingw-w64-x86_64-cmake
+          echo 025
+          ridk enable
           echo 030
           gem --version
           echo 031
