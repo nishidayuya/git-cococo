@@ -72,7 +72,7 @@ jobs:
           echo 100
           ridk exec bundle install --jobs $(nproc) --retry 3
           echo 110
-          bundle exec ruby -rdevkit -rrugged -e 'p Rugged::Version'
+          ridk exec -- bundle exec ruby -rdevkit -rrugged -e 'p Rugged::Version'
           echo 115
 #          gem install rugged -- --use-system-libraries
 #        run: |
