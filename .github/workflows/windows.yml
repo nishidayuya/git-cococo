@@ -43,6 +43,7 @@ jobs:
             mingw-w64-x86_64-openssl `
             mingw-w64-x86_64-libssh2 `
             mingw-w64-x86_64-libgit2 `
+            mingw-w64-x86_64-gmp `
             mingw-w64-x86_64-cmake
           echo 030
           gem --version
