@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+TAGS_URI=https://api.github.com/repos/git/git/tags
+
+curl --silent $TAGS_URI |
+  jq '.[].name' |
+  sed -e '/-rc/ d' -e 's|"||g' -e 's/^v//' |
+  sed -n -e '1 p'
