@@ -30,10 +30,7 @@ jobs:
         run: |
           set -eux
           sudo apt install -y gettext
-          curl --silent https://api.github.com/repos/git/git/tags \
-          | jq '.[].name' \
-          | sed -n -e '/-rc/ d' -e 's|"||g' -e 's/^v//' -e '1 p' \
-          > /tmp/git_version.t
+          ./tools/latest_git_version > /tmp/git_version.t
           git_version=$(cat /tmp/git_version.t)
           ./tools/install_git $git_version
           ls -d --sort=version ~/git-versions/* \
