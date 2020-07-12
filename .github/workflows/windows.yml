@@ -63,7 +63,7 @@ jobs:
           echo 100
           ridk exec bundle install --jobs $(nproc) --retry 3
           echo 110
-          ridk exec bundle exec ruby -rdevkit -S rake test
+          ridk exec bundle exec ruby -rdevkit -S rake test TESTOPTS=--verbose
           echo 115
 #          gem install rugged -- --use-system-libraries
 #        run: |
