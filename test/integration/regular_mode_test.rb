@@ -7,37 +7,37 @@ class RegularModeTest < IntegrationTestCase
 
   test("commit new file after command run") do
     prepare_committed_file
-    assert_equal(1, @repository.head.log.length)
-    assert_git_status([])
+    assert_equal(1, @repository.log.size)
+    assert_untracked_files([])
 
     new_file_path = Pathname("new_file.txt")
     command = "git cococo append_file #{new_file_path} wrote."
     run_command(command)
 
-    assert_git_status([])
-    assert_equal("run: #{command}\n", @repository.head.target.message)
-    assert_equal(2, @repository.head.log.length)
+    assert_untracked_files([])
+    assert_equal("run: #{command}", @repository.log.first.message)
+    assert_equal(2, @repository.log.size)
     assert_equal("wrote.\n", new_file_path.read)
   end
 
   test("commit exist file after command run") do
     prepare_committed_file
-    assert_equal(1, @repository.head.log.length)
-    assert_git_status([])
+    assert_equal(1, @repository.log.size)
+    assert_untracked_files([])
 
     command = "git cococo append_file #{@exist_file_path} wrote."
     run_command(command)
 
-    assert_git_status([])
-    assert_equal("run: #{command}\n", @repository.head.target.message)
-    assert_equal(2, @repository.head.log.length)
+    assert_untracked_files([])
+    assert_equal("run: #{command}", @repository.log.first.message)
+    assert_equal(2, @repository.log.size)
     assert_equal("wrote.\nwrote.\n", @exist_file_path.read)
   end
 
   test("commit with escaped command commit message: quote case") do
     prepare_committed_file
-    assert_equal(1, @repository.head.log.length)
-    assert_git_status([])
+    assert_equal(1, @repository.log.size)
+    assert_untracked_files([])
 
     content = " \"'$PATH  # \\ "
     command = [
@@ -47,18 +47,18 @@ class RegularModeTest < IntegrationTestCase
     ]
     run_command(*command)
 
-    assert_git_status([])
+    assert_untracked_files([])
     expected_content = content.gsub("\'", "'\\\\''") # ' => '\''
-    assert_equal("run: #{command[0 .. -2].join(" ")} '#{expected_content}'\n",
-                 @repository.head.target.message)
-    assert_equal(2, @repository.head.log.length)
+    assert_equal("run: #{command[0 .. -2].join(" ")} '#{expected_content}'",
+                 @repository.log.first.message)
+    assert_equal(2, @repository.log.size)
     assert_equal("wrote.\n#{content}\n", @exist_file_path.read)
   end
 
   test("commit with escaped command commit message: sh -c case") do
     prepare_committed_file(content: "writed.\n")
-    assert_equal(1, @repository.head.log.length)
-    assert_git_status([])
+    assert_equal(1, @repository.log.size)
+    assert_untracked_files([])
 
     command = [
       *%w"git cococo sh -c",
@@ -66,19 +66,19 @@ class RegularModeTest < IntegrationTestCase
     ]
     run_command(*command)
 
-    assert_git_status([])
+    assert_untracked_files([])
     # TODO: last 2-quote characters are extra.
-    assert_equal(<<EOS, @repository.head.target.message)
+    assert_equal(<<EOS.chomp, @repository.log.first.message)
 run: git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 EOS
-    assert_equal(2, @repository.head.log.length)
+    assert_equal(2, @repository.log.size)
     assert_equal("wrote.\n", @exist_file_path.read)
   end
 
   test("commit with backslash in command argument") do
     prepare_committed_file
-    assert_equal(1, @repository.head.log.length)
-    assert_git_status([])
+    assert_equal(1, @repository.log.size)
+    assert_untracked_files([])
 
     command = %W"git cococo append_file #{@exist_file_path} \\a\\b\a\b\\n"
     run_command(*command)
@@ -87,11 +87,11 @@ wrote.
 \\a\\b\a\b\\n
 EOS
 
-    assert_git_status([])
-    assert_equal(<<EOS, @repository.head.target.message)
+    assert_untracked_files([])
+    assert_equal(<<EOS.chomp, @repository.log.first.message)
 run: git cococo append_file #{@exist_file_path} '\\a\\b\a\b\\n'
 EOS
-    assert_equal(2, @repository.head.log.length)
+    assert_equal(2, @repository.log.size)
     assert_equal(<<EOS, @exist_file_path.read)
 wrote.
 \\a\\b\a\b\\n
@@ -104,8 +104,8 @@ EOS
     uncommitted_file_path = Pathname("uncommitted_file.txt")
     uncommitted_file_path.write("wrote.\n")
 
-    assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
-    assert_equal(1, @repository.head.log.length)
+    assert_untracked_files([uncommitted_file_path])
+    assert_equal(1, @repository.log.size)
     command = [
       *%w"git cococo sh -c",
       "git ls-files -z | xargs -0 sed -i -e 's/writed/wrote/g'",
@@ -128,8 +128,8 @@ Or, use "--autostash" option:
 
     $ git cococo --autostash sh -c 'git ls-files -z | xargs -0 sed -i -e '\\''s/writed/wrote/g'\\'''
 STDOUT
-    assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
-    assert_equal(1, @repository.head.log.length)
+    assert_untracked_files([uncommitted_file_path])
+    assert_equal(1, @repository.log.size)
   end
 
   sub_test_case("--autostash") do
@@ -139,14 +139,14 @@ STDOUT
       uncommitted_file_path = Pathname("uncommitted_file.txt")
       uncommitted_file_path.write("wrote.\n")
 
-      assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
-      assert_equal(1, @repository.head.log.length)
+      assert_untracked_files([uncommitted_file_path])
+      assert_equal(1, @repository.log.size)
       new_file_path = Pathname("new_file.txt")
       command = "git cococo --autostash append_file #{new_file_path} wrote."
       run_command(command)
 
-      assert_git_status([["uncommitted_file.txt", [:worktree_new]]])
-      assert_equal(2, @repository.head.log.length)
+      assert_untracked_files([uncommitted_file_path])
+      assert_equal(2, @repository.log.size)
       assert_equal("wrote.\n", new_file_path.read)
     end
   end
@@ -157,6 +157,7 @@ STDOUT
     @exist_file_path = Pathname(path)
     @exist_file_path.parent.mkpath
     @exist_file_path.write(content)
-    @repository.git_commit(@repository.git_add(@exist_file_path))
+    @repository.add(@exist_file_path.to_s)
+    @repository.commit("commit.")
   end
 end

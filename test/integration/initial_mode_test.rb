@@ -9,10 +9,10 @@ class InitialModeTest < IntegrationTestCase
     command = "git cococo --init append_file #{new_file_path} wrote."
     run_command(command)
 
-    @repository = Rugged::Repository.new(".git")
-    assert_git_status([])
-    assert_equal("run: #{command}\n", @repository.head.target.message)
-    assert_equal(1, @repository.head.log.length)
+    @repository = Git.open(".")
+    assert_untracked_files([])
+    assert_equal("run: #{command}", @repository.log.first.message)
+    assert_equal(1, @repository.log.size)
     assert_equal("wrote.\n", new_file_path.read)
   end
 
@@ -24,11 +24,11 @@ class InitialModeTest < IntegrationTestCase
     run_command(*command)
 
     repository_path = Pathname("blog")
-    @repository = Rugged::Repository.new((repository_path / ".git").to_s)
-    assert_git_status([])
-    assert_equal("run: #{command[0 .. -2].join(" ")} '#{command[-1]}'\n",
-                 @repository.head.target.message)
-    assert_equal(1, @repository.head.log.length)
+    @repository = Git.open(repository_path.to_s)
+    assert_untracked_files([])
+    assert_equal("run: #{command[0 .. -2].join(" ")} '#{command[-1]}'",
+                 @repository.log.first.message)
+    assert_equal(1, @repository.log.size)
     assert_equal("Today is sunny!\n",
                  (repository_path / "2017-10-25-sunny.txt").read)
   end
