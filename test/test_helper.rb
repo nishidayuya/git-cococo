@@ -15,17 +15,6 @@ ENV["PATH"] = [
   *ENV["PATH"].split(File::PATH_SEPARATOR),
 ].map(&:to_s).join(File::PATH_SEPARATOR)
 
-Git::Base.class_eval do
-  def git_add(path)
-    add(path)
-  end
-
-  def git_commit(tree, **options)
-    message = options[:message] || "commit."
-    commit(message)
-  end
-end
-
 class RunCommandError < StandardError
 end
 
