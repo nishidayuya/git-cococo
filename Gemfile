@@ -6,5 +6,4 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem "git"
 gem "pry-byebug"
 gem "rake"
-gem "rugged"
 gem "test-unit"
