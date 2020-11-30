@@ -16,9 +16,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-rubygems-
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.x
+          ruby-version: ruby-2.7.2
       - name: Setup git
         run: |
           git config --global user.name git-cococo
@@ -39,4 +39,5 @@ jobs:
           bundle --version
           cmake --version
       - name: Run test
-        run: bundle exec rake test
+        run: |
+          bundle exec ./test/run.rb --verbose
