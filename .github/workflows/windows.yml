@@ -26,7 +26,8 @@ jobs:
           git config --global core.autocrlf false
       - name: Install dependencies
         run: |
-          pacman -S mingw-w64-x86_64-crt-git mingw-w64-x86_64-pcre msys2-w32api-runtime
+          pacman -S mingw-w64-x86_64-crt-git mingw-w64-x86_64-libgit2 mingw-w64-x86_64-pcre msys2-w32api-runtime
+          gem install rugged -- --use-system-libraries
           gem update --system
           gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
           bundle config --local path vendor/bundle
