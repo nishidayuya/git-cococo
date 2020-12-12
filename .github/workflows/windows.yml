@@ -28,6 +28,9 @@ jobs:
         env:
           CMAKE_OPTIONS: -A x64 -DWIN32_LEAKCHECK=ON -DDEPRECATE_HARD=ON
         run: |
+          echo before-gem-install-git
+          gem install git
+          echo after-gem-install-git
           pacman -S mingw-w64-x86_64-crt-git mingw-w64-x86_64-libgit2 mingw-w64-x86_64-pcre msys2-w32api-runtime
           echo gem-install-rugged
           gem install rugged -v $(awk '/ rugged / {print($2)}' Gemfile.lock | sed -e 's/[()]//g')
