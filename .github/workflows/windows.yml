@@ -27,8 +27,11 @@ jobs:
       - name: Install dependencies
         run: |
           pacman -S mingw-w64-x86_64-crt-git mingw-w64-x86_64-libgit2 mingw-w64-x86_64-pcre msys2-w32api-runtime
-          gem install rugged -- --use-system-libraries
+          echo gem-install-rugged
+          gem install rugged -v $(awk '/ rugged / {print($2)}' Gemfile.lock | sed -e 's/[()]//g') -- --use-system-libraries
+          echo gem-update-system
           gem update --system
+          echo gem-install-bundler
           gem install --no-document bundler -v $(sed -n -e '/^BUNDLED WITH$/, /^   / p' Gemfile.lock | tail -n1)
           bundle config --local path vendor/bundle
           bundle install --jobs $(nproc) --retry 3
