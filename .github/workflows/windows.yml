@@ -25,6 +25,7 @@ jobs:
           git config --global user.email git-cococo@example.org
           git config --global core.autocrlf false
       - name: Install dependencies
+        shell: msys2 {0}
         env:
           CMAKE_OPTIONS: -A x64 -DWIN32_LEAKCHECK=ON -DDEPRECATE_HARD=ON
         run: |
