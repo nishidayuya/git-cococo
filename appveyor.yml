@@ -1,13 +1,18 @@
 cache:
   - vendor/bundle
 
+init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
   - set PATH=C:\Ruby26-x64\bin;%PATH%
   - git config --global user.name git-cococo
   - git config --global user.email git-cococo@example.org
   - git config --global core.autocrlf false
-  - gem update --system
-  - gem update bundler
+  - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-pcre"
+  - gem install 
+  # - gem update --system
+  # - gem update bundler
   - bundle config --local path vendor/bundle
   - bundle install
 
