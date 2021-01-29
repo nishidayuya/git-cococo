@@ -6,7 +6,7 @@ GEM
     git (1.8.1)
       rchardet (~> 1.8)
     method_source (1.0.0)
-    power_assert (1.2.0)
+    power_assert (2.0.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -15,7 +15,7 @@ GEM
       pry (~> 0.13.0)
     rake (13.0.3)
     rchardet (1.8.0)
-    test-unit (3.3.9)
+    test-unit (3.4.0)
       power_assert
 
 PLATFORMS
