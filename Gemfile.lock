@@ -13,7 +13,7 @@ GEM
     pry-byebug (3.9.0)
       byebug (~> 11.0)
       pry (~> 0.13.0)
-    rake (13.0.3)
+    rake (13.0.5)
     rchardet (1.8.0)
     test-unit (3.4.4)
       power_assert
