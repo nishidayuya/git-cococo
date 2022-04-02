@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    debug (1.4.0)
+    debug (1.5.0)
       irb (>= 1.3.6)
       reline (>= 0.2.7)
     git (1.10.2)
