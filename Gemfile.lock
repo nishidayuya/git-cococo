@@ -4,7 +4,7 @@ GEM
     debug (1.5.0)
       irb (>= 1.3.6)
       reline (>= 0.2.7)
-    git (1.10.2)
+    git (1.11.0)
       rchardet (~> 1.8)
     io-console (0.5.11)
     irb (1.4.1)
