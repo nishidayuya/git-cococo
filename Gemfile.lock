@@ -12,13 +12,13 @@ GEM
     io-console (0.6.0)
     irb (1.6.2)
       reline (>= 0.3.0)
-    power_assert (2.0.1)
+    power_assert (2.0.3)
     public_suffix (5.0.1)
     rake (13.0.6)
     rchardet (1.8.0)
     reline (0.3.2)
       io-console (~> 0.5)
-    test-unit (3.5.5)
+    test-unit (3.5.7)
       power_assert
 
 PLATFORMS
