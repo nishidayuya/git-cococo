@@ -11,12 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Cache git
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v3.3.1
         with:
           path: ~/git-versions
           key: ${{ runner.os }}-git-latest
       - name: Cache rubygems
-        uses: actions/cache@v3.2.2
+        uses: actions/cache@v3.3.1
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
