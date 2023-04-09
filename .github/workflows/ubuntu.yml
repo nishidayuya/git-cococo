@@ -17,7 +17,7 @@ jobs:
           - 2.18.1 # CentOS 8 http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/
           - 2.17.1 # Ubuntu 18.04 https://packages.ubuntu.com/bionic/git
           - 2.11.0 # Debian 9 https://packages.debian.org/stretch/git
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Cache git
