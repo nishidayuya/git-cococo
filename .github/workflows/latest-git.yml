@@ -23,9 +23,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-rubygems-
       - name: Set up Ruby
-        uses: actions/setup-ruby@v1
+        uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.x
+          ruby-version: "3.2"
       - name: Setup git
         run: |
           set -eux
