@@ -129,3 +129,22 @@ $ bundle exec rake
 Submit pull-request.
 
 Thank you!
+
+### Tools for development
+
+#### To use specified version of Git:
+
+```console
+$ v=2.11.0
+$ ./tools/install_git $v
+$ ./tools/switch_git $v
+git version 2.11.0
+```
+
+#### To use latest released version of Git:
+
+```console
+$ v=$(./tools/latest_git_version)
+$ ./tools/install_git $v
+$ ./tools/switch_git $v
+```
