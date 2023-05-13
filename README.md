@@ -14,7 +14,7 @@
 
 `git cococo` is written by shell script. So we can install following:
 
-```sh
+```console
 $ wget https://raw.githubusercontent.com/nishidayuya/git-cococo/master/exe/git-cococo
 $ chmod a+x git-cococo
 $ mv git-cococo move-to-PATH-env-directory/
@@ -24,7 +24,7 @@ $ mv git-cococo move-to-PATH-env-directory/
 
 Run `sed` command and commit changes with re-runnable commit message "run: git cococo sed -i -e s/foo/bar/g a.txt".
 
-```sh
+```console
 $ git cococo sed -i -e s/foo/bar/g a.txt
 ```
 
@@ -32,7 +32,7 @@ $ git cococo sed -i -e s/foo/bar/g a.txt
 
 Oops! I forgot un-commmitted changes. `git cococo` tells me it and don't run command.
 
-```sh
+```console
 $ git cococo sed -i -e s/foo/bar/g a.txt
 Detects following uncommitted changes:
 
@@ -52,7 +52,7 @@ Or, use "--autostash" option:
 
 Replace `writed` to `wrote` all of git tracked files and commit.
 
-```sh
+```console
 $ git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e s/writed/wrote/g'
 ```
 
@@ -60,7 +60,7 @@ $ git cococo sh -c 'git ls-files -z | xargs -0 sed -i -e s/writed/wrote/g'
 
 ### for Rubyists
 
-```sh
+```console
 $ git cococo --init bundle init
 $ git cococo rbenv local 2.7.0
 $ git cococo bundle add rake
@@ -76,7 +76,7 @@ $ git cococo bin/rails db:migrate
 
 ### for JavaScripters
 
-```sh
+```console
 $ git cococo --init npm init --yes
 $ git cococo sh -c 'echo /node_modules | tee -a .gitignore'
 $ git cococo npm install --save express
@@ -85,7 +85,7 @@ $ git cococo npm install --save-dev mocha
 
 ### for Pythonistas
 
-```sh
+```console
 $ git cococo --init pyenv local 3.8.1
 $ git cococo touch requirements.txt
 $ git cococo sh -c 'echo /venv | tee -a .gitignore'
@@ -113,7 +113,7 @@ Clone this project.
 
 Install related RubyGems and run tests and lint:
 
-```sh
+```console
 $ bundle
 $ bundle exec rake
 ```
@@ -122,7 +122,7 @@ Write some changes with tests.
 
 Run tests and lint:
 
-```sh
+```console
 $ bundle exec rake
 ```
 
