@@ -9,6 +9,7 @@ jobs:
       fail-fast: false
       matrix:
         git:
+          - 2.39.2 # Debian 12 https://packages.debian.org/bookworm/git
           - 2.34.1 # Ubuntu 22.04 https://packages.ubuntu.com/jammy/git
           - 2.31.1 # CentOS Stream 9 http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/ , CentOS Stream 8 http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/
           - 2.27.0 # CentOS Stream 8 http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/
