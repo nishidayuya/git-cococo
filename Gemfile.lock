@@ -1,19 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.8.1)
+    addressable (2.8.6)
       public_suffix (>= 2.0.2, < 6.0)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
-    git (1.18.0)
+    git (1.19.0)
       addressable (~> 2.8)
       rchardet (~> 1.8)
     io-console (0.6.0)
     irb (1.6.4)
       reline (>= 0.3.0)
     power_assert (2.0.3)
-    public_suffix (5.0.1)
+    public_suffix (5.0.4)
     rake (13.0.6)
     rchardet (1.8.0)
     reline (0.3.3)
