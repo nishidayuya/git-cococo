@@ -18,7 +18,7 @@ GEM
     rchardet (1.8.0)
     reline (0.3.3)
       io-console (~> 0.5)
-    test-unit (3.6.1)
+    test-unit (3.6.2)
       power_assert
 
 PLATFORMS
