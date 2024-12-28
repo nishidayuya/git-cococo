@@ -18,7 +18,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby-2.7.2
+          ruby-version: ruby # latest version
       - name: Setup git
         run: |
           git config --global user.name git-cococo
