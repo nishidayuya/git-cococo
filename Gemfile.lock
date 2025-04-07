@@ -39,7 +39,7 @@ GEM
       reline (>= 0.4.2)
     logger (1.6.5)
     minitest (5.25.4)
-    power_assert (2.0.4)
+    power_assert (2.0.5)
     process_executer (1.2.0)
     psych (5.2.2)
       date
@@ -53,7 +53,7 @@ GEM
       io-console (~> 0.5)
     securerandom (0.4.1)
     stringio (3.1.2)
-    test-unit (3.6.7)
+    test-unit (3.6.8)
       power_assert
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
