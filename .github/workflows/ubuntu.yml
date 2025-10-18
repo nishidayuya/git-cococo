@@ -22,7 +22,7 @@ jobs:
           - 2.11.0 # Debian 9 https://packages.debian.org/stretch/git
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Cache git
         uses: actions/cache@v4.3.0
         with:
