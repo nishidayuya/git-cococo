@@ -41,7 +41,7 @@ GEM
     json (2.16.0)
     logger (1.7.0)
     minitest (5.26.1)
-    power_assert (2.0.5)
+    power_assert (3.0.1)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -60,7 +60,7 @@ GEM
       io-console (~> 0.5)
     securerandom (0.4.1)
     stringio (3.1.7)
-    test-unit (3.7.0)
+    test-unit (3.7.1)
       power_assert
     track_open_instances (0.1.15)
     tzinfo (2.0.6)
