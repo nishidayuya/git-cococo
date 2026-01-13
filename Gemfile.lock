@@ -26,7 +26,7 @@ GEM
       reline (>= 0.3.8)
     drb (2.2.3)
     erb (5.0.2)
-    git (4.1.1)
+    git (4.2.0)
       activesupport (>= 5.0)
       addressable (~> 2.8)
       process_executer (~> 4.0)
