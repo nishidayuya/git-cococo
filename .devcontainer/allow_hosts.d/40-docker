@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+sed -E -e '/^\s*#|^\s*$/ d' <<EOF
+# docker login
+index.docker.io
+
+# Docker Engine installation
+download.docker.com
+
+# webg --text --css-selector='table .link' https://docs.docker.com/desktop/setup/allow-list/ |
+# sed -E -e 's|^https?://||' |
+# sort
+api.docker.com
+api.dso.docker.com
+auth.docker.com
+auth.docker.io
+cdn.auth0.com
+desktop.docker.com
+dhi.io
+docker-images-prod.6aa30f8b08e16409b46e0173d6de2f56.r2.cloudflarestorage.com
+docker-pinata-support.s3.amazonaws.com
+hub.docker.com
+login.docker.com
+notify.bugsnag.com
+production.cloudflare.docker.com
+registry-1.docker.io
+registry.scout.docker.com
+sessions.bugsnag.com
+EOF

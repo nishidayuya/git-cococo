@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -eu
+
+cat <<EOF
+cloudcode-pa.googleapis.com
+oauth2.googleapis.com
+www.gstatic.com
+EOF
+
+# https://knowledge.workspace.google.com/admin/security/obtain-google-ip-address-ranges
+curl -s https://www.gstatic.com/ipranges/goog.json | \
+  jq -r '.prefixes[] | select(.ipv4Prefix != null) | .ipv4Prefix' | \
+  grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?$'
