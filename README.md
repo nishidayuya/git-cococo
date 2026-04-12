@@ -12,7 +12,23 @@
 
 ## Installation
 
-`git cococo` is written by shell script. So we can install following:
+### Using install script
+
+`git cococo` can be installed using the following command:
+
+```console
+$ curl -fsL https://raw.githubusercontent.com/nishidayuya/git-cococo/main/install.sh | sh
+```
+
+For system-wide installation, run with `sudo`:
+
+```console
+$ curl -fsL https://raw.githubusercontent.com/nishidayuya/git-cococo/main/install.sh | sudo sh
+```
+
+### Manual installation
+
+`git cococo` is written in shell script, so we can also install it manually:
 
 ```console
 $ wget https://raw.githubusercontent.com/nishidayuya/git-cococo/master/exe/git-cococo
