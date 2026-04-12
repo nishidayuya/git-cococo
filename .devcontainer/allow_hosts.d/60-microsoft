@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -eu
+
+cat <<EOF
+mcr.microsoft.com
+ghcr.io
+pkg-containers.githubusercontent.com
+EOF

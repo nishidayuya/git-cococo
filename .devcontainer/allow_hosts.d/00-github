@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+# Fixed domains
+cat <<EOF
+github.com
+api.github.com
+docs.github.com
+objects.githubusercontent.com
+EOF
+
+# GitHub IP ranges (IPv4 only)
+#
+# https://docs.github.com/ja/rest/meta/meta?apiVersion=2026-03-10#get-github-meta-information
+curl -s -H "Accept: application/vnd.github+json" https://api.github.com/meta | \
+  jq -r '.git[], .web[], .api[], .actions[], .packages[], .pages[]' | \
+  grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}(/[0-9]{1,2})?$' | \
+  sort -u
