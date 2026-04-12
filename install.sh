@@ -12,7 +12,8 @@ fi
 mkdir -p "$BIN_DIR"
 
 # Download git-cococo
-URL="https://raw.githubusercontent.com/nishidayuya/git-cococo/main/exe/git-cococo"
+REF="${GIT_COCOCO_REF:-main}"
+URL="https://raw.githubusercontent.com/nishidayuya/git-cococo/$REF/exe/git-cococo"
 TARGET="$BIN_DIR/git-cococo"
 
 echo "Installing git-cococo to $TARGET..."
