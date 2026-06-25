@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Cache rubygems
-        uses: actions/cache@v4.3.0
+        uses: actions/cache@v6.0.0
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-rubygems-${{ hashFiles('**/Gemfile.lock') }}
